@@ -98,32 +98,6 @@ public class IPHelper {
 			return JSONObject.parseObject(ip_json);
 		}
 
-//
-//
-//		if (StrUtil.isBlank(ip_json)) {
-//			System.out.println("进入判断");
-////			// 1、先从数据库中查询地域信息
-//
-//
-//			String province, province_code, city, city_code, district, district_code, operator, longitude, latitude;
-//
-////			// 将ip信息存入redis中
-//			JSONObject ipRe = new JSONObject();
-//			ipRe.put("ip", ip);
-//			ipRe.put("province_name", province);
-//			ipRe.put("province_code", province_code);
-//			ipRe.put("city_name", city);
-//			ipRe.put("city_code", city_code);
-//			ipRe.put("district_name", district);
-//			ipRe.put("district_code", district_code);
-//			ipRe.put("operator", operator);
-//			ipRe.put("longitude", longitude);
-//			ipRe.put("latitude", latitude);
-//			RedisModifyHelper.updateIpRegion(ip, ipRe.toJSONString());
-//			return ipRe;
-//		} else {
-//			return JSONObject.parseObject(ip_json);
-//		}
 	}
 
 
@@ -151,6 +125,7 @@ public class IPHelper {
 				String district_name_db = namePaths.length > 3 ? namePaths[3] : "其他";
 				String district_code_db = codePaths.length > 3 ? codePaths[3] : "000000";
 
+				//TODO 比较IPIP库中的省、市、区的名称和数据库的名称是否一致，如果不一致，需要更新数据库，并且同步redis
 				/*// 比较IPIP库中的省、市、区的名称和数据库的名称是否一致，如果不一致，需要更新数据库，并且同步redis
 				if (namePaths.length > 1 && !StrUtil.equalsIgnoreCase(province_name, province_name_db)) { // 更新省名称
 					pdcRegionService.updateRname(province_name_db,province_name,1);
@@ -230,34 +205,5 @@ public class IPHelper {
 
 
 
-
-
-
-
-//
-//	/**
-//	 *
-//	 * 根据省名称，地市名称，区名称返回对应的code，以数组形式返回。数组长度为3位，此方法不能单独使用，需要调用DB的方法，必须在Jfinal框架中运行<br>
-//	 * 添加: 张俭 - 2020年9月23日 下午10:08:10<br>
-//	 * 修改: 张俭 - 2020年9月23日 下午10:08:10<br>
-//	 *
-//	 * @param province_name
-//	 * @param city_name
-//	 * @param district_name
-//	 * @return [province_code,city_code,district_code]
-//	 */
-
-
-	public static void main(String[] args) {
-//		String[] array = IPIPUtil.getIpRegion("13.250.177.223"); // ipip库查询
-//		String[] array1 = IPIPUtil.getIpAddress("60.17.1.123");
-//
-//		Console.log(array);
-//		Console.log(array1);
-//		Console.log(IPIPUtil.getIpRegionStr("113.233.138.250"));
-//
-//		String aaString = "/aaa/bbb/cc/";
-//		Console.log(aaString.substring(1, aaString.length() - 1));
-	}
 
 }

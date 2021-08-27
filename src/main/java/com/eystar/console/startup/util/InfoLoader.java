@@ -73,5 +73,20 @@ public class InfoLoader {
 		}
 	}
 
-
+    public synchronized static JSONObject loadTaskSrcDest(String taskId) {
+        String key = Constants.REDIS_KEY_TASK_SRC_DEST + taskId;
+        String taskJson = redisUtils.get(key);
+        if (StrUtil.isBlank(taskJson)) {
+//            TaskSrcDest taskSrcDest = TaskSrcDest.dao.findById(taskId);
+//            if (taskSrcDest != null) {
+//                taskJson = taskSrcDest.toJson();
+//                if (OperationConfig.isReplace) {
+//                    RedisModifyHelper.updateTaskSrcDest(taskId, taskJson);
+//                }
+//            } else {
+//                return new JSONObject();
+//            }
+        }
+        return JSONObject.parseObject(taskJson);
+    }
 }

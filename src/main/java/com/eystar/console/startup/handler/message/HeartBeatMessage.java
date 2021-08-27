@@ -1,8 +1,9 @@
-package com.eystar.console.startup.handler;
+package com.eystar.console.startup.handler.message;
 
 import com.alibaba.fastjson.JSONObject;
 
 import cn.hutool.core.util.StrUtil;
+import com.eystar.console.startup.handler.message.Message;
 
 //------------------------------------------------------------------------
 public class HeartBeatMessage extends Message {

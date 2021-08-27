@@ -30,7 +30,6 @@ public class ProbeServiceImpl implements ProbeService {
     public void updateProbe(TPProbe tpProbe) {
         DataSourceType value = DataSourceType.mysql;
         DataSourceContextHolder.setDataSource(value);
-
         tPProbeMapper.updateByPrimaryKeySelective(tpProbe);
         DataSourceContextHolder.clearDataSource();
     }

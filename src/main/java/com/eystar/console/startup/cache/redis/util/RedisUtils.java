@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.util.Map;
 import java.util.Set;
 
 
@@ -183,6 +184,42 @@ public class RedisUtils {
 			}
 		}
 	}
+
+	public String setex(String key,int field,String value) {
+			Jedis jedis = null;
+			try {
+				jedis = pool.getResource();
+				return jedis.setex(key,field,value);
+			} finally {
+				if (jedis != null) {
+					jedis.close();
+				}
+			}
+		}
+
+	public Map<String, String> hgetAll(String key) {
+			Jedis jedis = null;
+			try {
+				jedis = pool.getResource();
+				return jedis.hgetAll(key);
+			} finally {
+				if (jedis != null) {
+					jedis.close();
+				}
+			}
+		}
+
+public long hdel(String key,String field) {
+			Jedis jedis = null;
+			try {
+				jedis = pool.getResource();
+				return jedis.hdel(key,field);
+			} finally {
+				if (jedis != null) {
+					jedis.close();
+				}
+			}
+		}
 
 
 

@@ -1,4 +1,4 @@
-package com.eystar.console.startup.handler;
+package com.eystar.console.startup.handler.message;
 
 
 import org.slf4j.Logger;

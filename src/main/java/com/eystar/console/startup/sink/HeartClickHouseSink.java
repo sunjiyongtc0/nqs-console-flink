@@ -11,9 +11,9 @@ import com.eystar.console.startup.cache.redis.util.RedisUtils;
 import com.eystar.console.startup.entity.CPHeartbeat;
 import com.eystar.console.startup.entity.TPProbe;
 import com.eystar.console.startup.env.BeanFactory;
-import com.eystar.console.startup.handler.HeartBeatMessage;
+import com.eystar.console.startup.handler.message.HeartBeatMessage;
 import com.eystar.console.startup.handler.probe.ProbeAccessTypeHelper;
-import com.eystar.console.startup.handler.probe.ProbeRegistThread;
+import com.eystar.console.startup.handler.thread.ProbeRegistThread;
 import com.eystar.console.startup.service.*;
 import com.eystar.console.startup.service.impl.*;
 import com.eystar.console.startup.util.InfoLoader;
@@ -135,15 +135,5 @@ public class HeartClickHouseSink extends RichSinkFunction<HeartBeatMessage> {
         super.close();
     }
 
-
-//    public  JSONObject findDefaultAccessTypeFromRedis(String probeId) {
-//        InfoLoader.loadProbeAccessType(probeId); // 加载探针到端口到redis中
-//        String defaultName = Redis.use().hget(Constants.REDIS_KEY_ACCESS_TYPE + probeId, "default_name");
-//        if (StrUtil.isBlank(defaultName)) {
-//            return null;
-//        }
-//        String json = redisUtils.hget(Constants.REDIS_KEY_ACCESS_TYPE + probeId, defaultName);
-//        return JSONObject.parseObject(json);
-//    }
 
 }

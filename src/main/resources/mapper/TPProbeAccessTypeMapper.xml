@@ -93,10 +93,27 @@
     where probe_id = #{probeId,jdbcType=VARCHAR}
   </select>
 
+ <select id="findByAccessType" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_p_probe_access_type
+    where probe_id = #{probeId,jdbcType=VARCHAR} and access_type_name= #{accessTypeName,jdbcType=VARCHAR}
+  </select>
+
+
+  <delete id="deleteAccessTypeByName" parameterType="java.lang.String">
+  delete from t_p_probe_access_type
+   where probe_id = #{probeId,jdbcType=VARCHAR} and access_type_name= #{accessTypeName,jdbcType=VARCHAR}
+
+  </delete>
+
 
 
   <insert id="insert" parameterType="com.eystar.console.startup.entity.TPProbeAccessType">
-    insert into t_p_probe_access_type (id, probe_id, access_type_name, 
+    <selectKey resultType="java.lang.String" order="AFTER" keyProperty="productId">
+          select LAST_INSERT_ID()
+    </selectKey>
+        insert into t_p_probe_access_type (id, probe_id, access_type_name,
       is_default, mac, ip, 
       mask, dns, gateway, 
       link_type, no, connect_status, 
@@ -108,7 +125,7 @@
       #{speed,jdbcType=DOUBLE})
   </insert>
   <insert id="insertSelective" parameterType="com.eystar.console.startup.entity.TPProbeAccessType">
-    insert into t_p_probe_access_type
+    insert ignore into t_p_probe_access_type
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -236,6 +253,7 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.eystar.console.startup.entity.TPProbeAccessType">
     update t_p_probe_access_type
     set probe_id = #{probeId,jdbcType=VARCHAR},

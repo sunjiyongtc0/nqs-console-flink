@@ -2,8 +2,8 @@ package com.eystar.console.startup;
 
 
 import com.eystar.console.startup.env.BaseFlink;
-import com.eystar.console.startup.handler.HeartBeatMessage;
-import com.eystar.console.startup.sink.HeartClickHouseSink;
+import com.eystar.console.startup.handler.message.GwInfoMessage;
+import com.eystar.console.startup.sink.ProbeClickHouseSink;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
@@ -16,10 +16,10 @@ import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import java.util.Properties;
 
 
-public class ConsoleDataMain  extends BaseFlink {
+public class ConsoleProbeInfoDataMain extends BaseFlink {
 
     public static void main(String[] args) throws Exception {
-        ConsoleDataMain topo = new ConsoleDataMain();
+        ConsoleProbeInfoDataMain topo = new ConsoleProbeInfoDataMain();
         topo.run(ParameterTool.fromArgs(args));
     }
 
@@ -27,7 +27,7 @@ public class ConsoleDataMain  extends BaseFlink {
 
     @Override
     public String getJobName() {
-        return "ConsoleDataMain";
+        return "ConsoleProbeInfoDataMain";
     }
 
     @Override
@@ -42,29 +42,31 @@ public class ConsoleDataMain  extends BaseFlink {
 
     @Override
     public void createTopology(StreamExecutionEnvironment builder) {
-        FlinkKafkaConsumer<String> consumer = new FlinkKafkaConsumer<String>("heartbeat_info", new SimpleStringSchema(), KafkaProperties());
+        FlinkKafkaConsumer<String> consumer = new FlinkKafkaConsumer<String>("gateway_info", new SimpleStringSchema(), KafkaProperties());
         DataStreamSource<String> stream = env.addSource(consumer);
 
-        DataStream<HeartBeatMessage> streamMessage = stream.map(new MapFunction<String, HeartBeatMessage>() {
-            public HeartBeatMessage map(String msg) throws Exception {
-                HeartBeatMessage message = new HeartBeatMessage(msg);
+        DataStream<GwInfoMessage> streamMessage = stream.map(new MapFunction<String, GwInfoMessage>() {
+            public GwInfoMessage map(String msg) throws Exception {
+                GwInfoMessage message = new GwInfoMessage(msg);
                 return message;
             }
         });
 
-        DataStream<HeartBeatMessage> streamAlert = streamMessage.filter(new FilterFunction<HeartBeatMessage>() {
-            public boolean filter(HeartBeatMessage message) throws Exception {
+        // 筛选算子(去除不完整数据)
+        DataStream<GwInfoMessage> streamAlert = streamMessage.filter(new FilterFunction<GwInfoMessage>() {
+            public boolean filter(GwInfoMessage message) throws Exception {
                 return !message.isBadMsg();
             }
         });
-        streamAlert.addSink(new HeartClickHouseSink());
+        streamAlert.print("kafka数据为=》");
+        streamAlert.addSink(new ProbeClickHouseSink());
 
     }
 
 
     public static Properties KafkaProperties() {
         Properties props = new Properties();
-        props.put("group.id", "spring-clickhouse1");
+        props.put("group.id", "spring-clickhouse");
         props.put("enable.auto.commit", "true");
         props.put("auto.commit.interval.ms", "1000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");

@@ -1,4 +1,4 @@
-package com.eystar.console.startup.handler.probe;
+package com.eystar.console.startup.handler.thread;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
@@ -7,7 +7,7 @@ import com.eystar.common.util.UUIDKit;
 import com.eystar.console.startup.cache.redis.util.RedisUtils;
 import com.eystar.console.startup.entity.CPHeartbeat;
 import com.eystar.console.startup.entity.TPProbe;
-import com.eystar.console.startup.handler.HeartBeatMessage;
+import com.eystar.console.startup.handler.message.HeartBeatMessage;
 import com.eystar.console.startup.service.HeartbeatService;
 import com.eystar.console.startup.service.ProbeService;
 import com.eystar.console.startup.util.ProbeHelper;
