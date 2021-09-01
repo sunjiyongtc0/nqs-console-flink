@@ -5,27 +5,13 @@ import java.util.Date;
 
 public class GwDnsData extends  GwData implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
-
-    private Double score;
 
     private Double timeCost;
 
     private Double successRate;
 
     private String detail;
-
-
-
-
-    public Double getScore() {
-        return score;
-    }
-
-    public void setScore(Double score) {
-        this.score = score;
-    }
+    private Integer errorCode;
 
     public Double getTimeCost() {
         return timeCost;
@@ -51,5 +37,12 @@ public class GwDnsData extends  GwData implements Serializable {
         this.detail = detail;
     }
 
+    public Integer getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(Integer errorCode) {
+        this.errorCode = errorCode;
+    }
 
 }

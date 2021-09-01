@@ -89,27 +89,41 @@ public class RedisModifyHelper {
 		}
 	}
 
+	public static void updateTaskSrcDest(String taskId, String json) {
+		String key = Constants.REDIS_KEY_TASK_SRC_DEST + taskId;
+		Long ttl =redisUtils.pttl(key);
+		Long left = Constants.REDIS_KEY_EXPIRE_TEN_MINUTES * 1000L;
+		if (ttl > 0) { // 说明没有过期时间或者不存在key，-1表示永不过期，-2表示不存在key
+			left = ttl;
+		}
+		logger.debug("更新任务key = " + key + " , left = " + left + " , ttl = " + ttl);
+		if (left / 1000 == 0) { // 转成秒
+			redisUtils.del(key);
+		}else {
+			redisUtils.set(key, json);
+			redisUtils.pexpire(key, left);
+		}
+	}
+
+
+	public static void updateTaskParam(String taskParamId, String json) {
+		String key = Constants.REDIS_KEY_TASK_PARAM + taskParamId;
+		Long ttl = redisUtils.pttl(key);
+		Long left = Constants.REDIS_KEY_EXPIRE_ONE_HOUR * 1000L;
+		if (ttl > 0) { // 说明没有过期时间或者不存在key，-1表示永不过期，-2表示不存在key
+			left = ttl;
+		}
+		System.out.println("更新任务参数key = " + key + " , left = " + left + " , ttl = " + ttl);
+		if (left / 1000 == 0) { // 转成秒
+			redisUtils.del(key);
+		}else {
+			redisUtils.set(key, json);
+			redisUtils.pexpire(key, left);
+		}
+	}
 
 
 
-
-
-//
-//	public static void updateTaskSrcDest(String taskId, String json) {
-//		String key = Constants.REDIS_KEY_TASK_SRC_DEST + taskId;
-//		Long ttl = Redis.use().pttl(key);
-//		Long left = Constants.REDIS_KEY_EXPIRE_TEN_MINUTES * 1000L;
-//		if (ttl > 0) { // 说明没有过期时间或者不存在key，-1表示永不过期，-2表示不存在key
-//			left = ttl;
-//		}
-//		logger.debug("更新任务key = " + key + " , left = " + left + " , ttl = " + ttl);
-//		if (left / 1000 == 0) { // 转成秒
-//			Redis.use().del(key);
-//		}else {
-//			Redis.use().set(key, json);
-//			Redis.use().pexpire(key, left);
-//		}
-//	}
 //
 //	/**
 //	 *
@@ -119,21 +133,7 @@ public class RedisModifyHelper {
 //	 * @param taskParamId
 //	 * @param json
 //	 */
-//	public static void updateTaskParam(String taskParamId, String json) {
-//		String key = Constants.REDIS_KEY_TASK_PARAM + taskParamId;
-//		Long ttl = Redis.use().pttl(key);
-//		Long left = Constants.REDIS_KEY_EXPIRE_ONE_HOUR * 1000L;
-//		if (ttl > 0) { // 说明没有过期时间或者不存在key，-1表示永不过期，-2表示不存在key
-//			left = ttl;
-//		}
-//		logger.debug("更新任务参数key = " + key + " , left = " + left + " , ttl = " + ttl);
-//		if (left / 1000 == 0) { // 转成秒
-//			Redis.use().del(key);
-//		}else {
-//			Redis.use().set(key, json);
-//			Redis.use().pexpire(key, left);
-//		}
-//	}
+
 //
 //	/**
 //	 *

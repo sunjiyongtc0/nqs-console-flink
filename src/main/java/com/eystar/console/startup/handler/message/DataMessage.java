@@ -15,7 +15,6 @@ public class DataMessage extends Message {
 			setMsgJson(object);
 			Long time = getMsgJson().getLongValue("test_time"); // 这个时间是探针上报的时间
 			// 如果时间是3天前的数据，可能就是探针上时间不准导致，这个时候将上报的时间改为当前时间
-//			if (Math.abs(System.currentTimeMillis() / 1000 - time) > XxlConfClient.getLong("gw-console.probe.time.offset")) {
 			if (Math.abs(System.currentTimeMillis() / 1000 - time) > 108000) {
 				time = System.currentTimeMillis() / 1000;
 			}

@@ -44,7 +44,7 @@ public class ConsoleProbeInfoDataMain extends BaseFlink {
     public void createTopology(StreamExecutionEnvironment builder) {
         FlinkKafkaConsumer<String> consumer = new FlinkKafkaConsumer<String>("gateway_info", new SimpleStringSchema(), KafkaProperties());
         DataStreamSource<String> stream = env.addSource(consumer);
-
+        stream.print("------");
         DataStream<GwInfoMessage> streamMessage = stream.map(new MapFunction<String, GwInfoMessage>() {
             public GwInfoMessage map(String msg) throws Exception {
                 GwInfoMessage message = new GwInfoMessage(msg);
@@ -66,7 +66,7 @@ public class ConsoleProbeInfoDataMain extends BaseFlink {
 
     public static Properties KafkaProperties() {
         Properties props = new Properties();
-        props.put("group.id", "spring-clickhouse");
+        props.put("group.id", "clickhouse-pinfo1");
         props.put("enable.auto.commit", "true");
         props.put("auto.commit.interval.ms", "1000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");

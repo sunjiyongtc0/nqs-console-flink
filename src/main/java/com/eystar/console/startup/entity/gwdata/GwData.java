@@ -9,9 +9,28 @@ public class GwData   implements Serializable {
 
 
     private String id;
+    private String probeId;
+    private String probeName;
+    private String probeIp;
+    private String probeAlias;
+    private String pppoeUsername;
+    private String vendor;
+    private String pc;
+    private String loid;
+    private String serialNum;
+    private String taskParamId;
+    private String taskParamName;
+    private String taskTypeName;
+    private String taskId;
+    private String taskMd5;
     private String accessTypeName;
     private Long testTime;
+    private Long testTimeD;
+    private Long testTimeH;
+    private Long testTimeM;
+    private Long testTimeW;
     private String destId;
+    private String destName;
     private String destAddr;
     private Long provinceCode;
     private String provinceName;
@@ -19,38 +38,20 @@ public class GwData   implements Serializable {
     private String cityName;
     private Long districtCode;
     private String districtName;
-    private String probeId;
     private Long townCode;
     private String townName;
     private Integer taskFrom;
-    private Long testTimeH;
-    private String probeAlias;
-    private Long testTimeD;
-    private String destName;
-    private String probeIp;
-    private String probeName;
-    private String pppoeUsername;
-    private String loid;
-    private String hostCity;
-    private String serialNum;
-    private String taskParamId;
-    private Long testTimeW;
-    private String taskParamName;
-    private String taskId;
-    private String taskTypeName;
-    private String alarmInfo;
-    private String vendor;
-    private String taskMd5;
     private String hostProvince;
-    private String pc;
+    private String hostCity;
     private String operator;
     private Integer netType;
-    private Long testTimeM;
     private Integer isAlarm;
-    private Long createTime;
-    private Date monthTime;
+    private String alarmInfo;
+    private Double score;
     private String hostIp;
 
+    private Long createTime;
+    private Date monthTime;
     @Override
     public String toString() {
         return "GwData{" +
@@ -102,7 +103,13 @@ public class GwData   implements Serializable {
     public String getId() {
         return id;
     }
+    public Double getScore() {
+        return score;
+    }
 
+    public void setScore(Double score) {
+        this.score = score;
+    }
     public void setId(String id) {
         this.id = id;
     }

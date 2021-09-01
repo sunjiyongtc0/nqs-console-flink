@@ -1,15 +1,20 @@
 package com.eystar.console.startup.handler.parser;
 
-import java.util.Date;
 
-
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.eystar.common.util.IPHelper;
+import com.eystar.common.util.UUIDKit;
+import com.eystar.console.startup.entity.gwdata.GwData;
+import com.eystar.console.startup.entity.gwdata.GwHttpData;
+import com.eystar.console.startup.entity.gwdata.GwHttpDetailData;
+import com.eystar.console.startup.util.ChangeChar;
 
-
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public abstract class DetailAbstractDataParser extends AbstractDataParser {
 
@@ -23,64 +28,56 @@ public abstract class DetailAbstractDataParser extends AbstractDataParser {
 		this.taskTypeName = taskTypeName;
 	}
 
-//	@Override
-//	public void prepare(Record record) {
-//
-//	}
-//
-//	@Override
-//	public void after(Record srcRecord) {
-//		JSONArray array = null;
-//		try {
-//			array = JSONArray.parseArray(srcRecord.getStr("detail"));
-//			if (array == null) {
-//				return;
-//			}
-//		} catch (Exception e) {
-//			logger.error("解析detai出错，不是JSON格式，类型 = " + taskTypeName + "，detai = " + srcRecord.getStr("detail"), e);
-//			return;
-//		}
-//		List<Record> records = new ArrayList<Record>();
-//		Map<String, MetaDataField> map = ParserContext.getMetaDataField(taskTypeName);
-//		for (int i = 0; i < array.size(); i++) {
-//			Record record = new Record();
-//			record.setColumns(srcRecord);
-//			record.set("id", UUIDKit.nextShortUUID()); // 重新生成任务ID
-//			record.set("parent_id", srcRecord.getStr("id"));
-//			JSONObject object = array.getJSONObject(i);
-//			for (String key : object.keySet()) { // 循环指标
-//				if (!map.containsKey(key)) { // 元数据里面没有这个key
-//					continue;
-//				}
-//				MetaDataField field = map.get(key);
-//				setRecordValueByType(record, field, object, key);
-//			}
-//			if (StrUtil.isNotBlank(record.getStr("host_ip"))) {
-//				JSONObject ipInfo = IPHelper.getIpInfo(record.getStr("host_ip"));
-//				record.set("host_province", ipInfo.get("province_name"));// 省
-//				record.set("host_city", ipInfo.get("city_name"));// 市
-//				record.set("operator", ipInfo.get("operator"));// 运营商
-//			}
-//			fillEachDetailRecord(record);
-//			// 3、过滤掉非元数据表中的字段
-//			Map<String, MetaDataField> map2 = ParserContext.getMetaDataField(taskTypeName);
-//			String[] names = record.getColumnNames();
-//			for (String key : names) {
-//				if (!map2.containsKey(key)) { // 元数据里面没有这个key
-//					record.remove(key);
-//				}
-//			}
-//			record.set("create_time", record.getLong("test_time"));
-//			record.set("month_time", DateUtil.formatDate((Date) DateUtil.beginOfMonth(new Date(record.getLong("test_time_m").longValue() * 1000L))));
-//			records.add(record);
-//		}
-//		MetaData metaData = ParserContext.getMetaData(taskTypeName);
-//		try {
-//			BigDataDb.use().batchSave(metaData.getStr("meta_table"), records, 20);
-//		} catch (Exception e) {
-//			logger.error("批量保存" + taskTypeName + "的数据出现错误，父ID = " + srcRecord.getStr("parent_id") + "，待保存的JSON = " + srcRecord.getStr("detail"), e);
-//		}
-//	}
-//
-//	public abstract void fillEachDetailRecord(Record record);
+	@Override
+	public void prepare(GwData record) {
+
+	}
+
+	@Override
+	public void after(GwData Record) {
+		JSONArray array = null;
+		JSONObject srcRecord = (JSONObject) JSON.toJSON(Record);
+		try {
+			if(Record instanceof GwHttpData){
+				array = JSONArray.parseArray(srcRecord.getString("detail"));
+			}
+			if (array == null) {
+				return;
+			}
+		} catch (Exception e) {
+			System.out.println("解析detai出错，不是JSON格式，类型 = " + taskTypeName + "，detail = " + srcRecord.getString("detail")+ e.getMessage());
+			return;
+		}
+		List<GwData>  lgd=new ArrayList<GwData>();
+		for (int i = 0; i < array.size(); i++) {
+			GwHttpDetailData gwHttpDetailData=new GwHttpDetailData();
+			gwHttpDetailData=(GwHttpDetailData) DataParserHelper.setColumns(gwHttpDetailData,Record);
+			gwHttpDetailData.setId( UUIDKit.nextShortUUID()); // 重新生成任务ID
+			gwHttpDetailData.setParentId(Record.getId());
+			JSONObject DetailDataJson=(JSONObject)JSON.toJSON(gwHttpDetailData);
+			JSONObject object = array.getJSONObject(i);
+			Set<String> keys= object.keySet();
+			for(String key:keys){
+				DetailDataJson.put(ChangeChar.camelToUnderline(key,1),object.get(key));
+			}
+			gwHttpDetailData=JSON.parseObject(DetailDataJson.toJSONString(),GwHttpDetailData.class);
+
+			if (StrUtil.isNotBlank(gwHttpDetailData.getHostIp())) {
+				JSONObject ipInfo = IPHelper.getIpInfo(gwHttpDetailData.getHostIp());
+				gwHttpDetailData.setHostProvince(ipInfo.getString("province_name"));// 省
+				gwHttpDetailData.setHostCity( ipInfo.getString("city_name"));// 市
+				gwHttpDetailData.setOperator( ipInfo.getString("operator"));// 运营商
+			}
+			fillEachDetailRecord(gwHttpDetailData);
+
+			JSONObject gwHttpDetailDataJson = (JSONObject) JSON.toJSON(gwHttpDetailData);
+			lgd.add(gwHttpDetailData);
+		}
+		try {
+			DataParserHelper.insertDataDetailList(lgd);
+		} catch (Exception e) {
+			System.out.println("批量保存" + taskTypeName + "的数据出现错误，父ID = " + srcRecord.getString("id") + "，待保存的JSON = " + srcRecord.getString("detail")+"/n Error:"+e.getMessage());
+		}
+	}
+	public abstract void fillEachDetailRecord(GwData record);
 }

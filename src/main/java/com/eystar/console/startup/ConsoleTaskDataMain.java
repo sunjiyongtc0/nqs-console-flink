@@ -19,6 +19,7 @@ import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.flink.util.Collector;
 
@@ -31,7 +32,6 @@ public class ConsoleTaskDataMain  extends BaseFlink {
         ConsoleTaskDataMain topo = new ConsoleTaskDataMain();
         topo.run(ParameterTool.fromArgs(args));
     }
-
 
 
     @Override
@@ -56,6 +56,7 @@ public class ConsoleTaskDataMain  extends BaseFlink {
         ParserContext.init();
         DataStream<DataMessage> dataMessageStream = stream.flatMap(new FlatMapFunction<String, DataMessage>() {
             private static final long serialVersionUID = -6986783354031993339L;
+
             @Override
             public void flatMap(String msg, Collector<DataMessage> out) throws Exception {
                 try {
@@ -71,26 +72,19 @@ public class ConsoleTaskDataMain  extends BaseFlink {
                         out.collect(message);
                     }
                 } catch (Exception e) {
-                    System.out.println("解析探针上报数据出错，本次上报的信息为 = \r\n" + msg+e.getMessage());
+                    System.out.println("解析探针上报数据出错，本次上报的信息为 = \r\n" + msg+ e.getMessage());
                 }
             }
         });
 
-        DataStream<AbstractDataParser> streamMessage = dataMessageStream.map(new MapFunction<DataMessage, AbstractDataParser>() {
-            public AbstractDataParser map(DataMessage dateMsg) throws Exception {
-                AbstractDataParser parser = ParserContext.getDataItemParser(dateMsg.getTaskTypeName());
-                parser.init(dateMsg);
-                return parser;
-            }
-        });
-        streamMessage.addSink(new TaskDataClickHouseSink());
+        dataMessageStream.addSink(new TaskDataClickHouseSink());
 
     }
 
 
     public static Properties KafkaProperties() {
         Properties props = new Properties();
-        props.put("group.id", "spring-clickhouse");
+        props.put("group.id", "clickhouse-taskdata");
         props.put("enable.auto.commit", "true");
         props.put("auto.commit.interval.ms", "1000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");

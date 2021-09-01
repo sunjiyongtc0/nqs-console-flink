@@ -64,7 +64,7 @@ public class ConsoleProbeHeartDataMain extends BaseFlink {
 
     public static Properties KafkaProperties() {
         Properties props = new Properties();
-        props.put("group.id", "spring-clickhouse1");
+        props.put("group.id", "clickhouse-heart");
         props.put("enable.auto.commit", "true");
         props.put("auto.commit.interval.ms", "1000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");

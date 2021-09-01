@@ -6,8 +6,12 @@ import com.eystar.common.util.RedisModifyHelper;
 import com.eystar.console.startup.cache.redis.util.RedisUtils;
 import com.eystar.console.startup.entity.TPProbe;
 import com.eystar.console.startup.entity.TPProbeAccessType;
+import com.eystar.console.startup.entity.TTTaskParam;
+import com.eystar.console.startup.entity.TTTaskSrcDest;
 import com.eystar.console.startup.handler.probe.ProbeAccessTypeHelper;
 import com.eystar.console.startup.service.ProbeService;
+import com.eystar.console.startup.service.TaskParamService;
+import com.eystar.console.startup.service.TaskSrcDesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,17 +21,22 @@ import com.eystar.common.util.Constants;
 import java.util.List;
 import java.util.Set;
 
-
-//------------------------------------------------------------------------
 public class InfoLoader {
 
 	protected static final Logger logger = LoggerFactory.getLogger(InfoLoader.class);
 	private static RedisUtils redisUtils;
 	private static ProbeService probeService;
-
+	private static TaskSrcDesService taskSrcDesService;
+	private static TaskParamService taskParamService;
 	public static void  init(RedisUtils ru, ProbeService ps){
 		redisUtils=ru;
 		probeService=ps;
+	}
+
+
+	public static void  taskInit(TaskSrcDesService tsd,TaskParamService tp){
+		taskSrcDesService=tsd;
+		taskParamService=tp;
 	}
 
 
@@ -77,16 +86,47 @@ public class InfoLoader {
         String key = Constants.REDIS_KEY_TASK_SRC_DEST + taskId;
         String taskJson = redisUtils.get(key);
         if (StrUtil.isBlank(taskJson)) {
-//            TaskSrcDest taskSrcDest = TaskSrcDest.dao.findById(taskId);
-//            if (taskSrcDest != null) {
-//                taskJson = taskSrcDest.toJson();
-//                if (OperationConfig.isReplace) {
-//                    RedisModifyHelper.updateTaskSrcDest(taskId, taskJson);
-//                }
-//            } else {
-//                return new JSONObject();
-//            }
+            TTTaskSrcDest taskSrcDest = taskSrcDesService.findById(taskId);
+            if (taskSrcDest != null) {
+				RedisModifyHelper.updateTaskSrcDest(taskId,JSON.toJSONString(taskSrcDest));
+            } else {
+                return new JSONObject();
+            }
         }
         return JSONObject.parseObject(taskJson);
     }
+
+	public synchronized static JSONObject loadTaskParam(String taskParamId) {
+		String key = Constants.REDIS_KEY_TASK_PARAM + taskParamId;
+		String task_param_json = redisUtils.get(key);
+		if (StrUtil.isBlank(task_param_json)) {
+			TTTaskParam tp = taskParamService.findById(taskParamId);
+			if (tp != null) {
+				task_param_json = JSON.toJSONString(tp) ;
+					RedisModifyHelper.updateTaskParam(taskParamId,task_param_json);
+			} else {
+				return new JSONObject();
+			}
+		}
+		return JSONObject.parseObject(task_param_json);
+	}
+
+	public synchronized static JSONObject loadAlarmTemplate(String alarmTemplateId) {
+		String key = Constants.REDIS_KEY_ALARM_TEMPLATE + alarmTemplateId;
+		String alarm_template_json = redisUtils.get(key);
+//		if (StrUtil.isBlank(alarm_template_json)) {
+//			AlarmTemplate template = AlarmTemplate.dao.findAlarmTemplateById(alarmTemplateId);
+//			if (template != null) {
+//				alarm_template_json = template.toJson();
+//				if (OperationConfig.isReplace) {
+//					RedisModifyHelper.updateAlarmTemplate(alarmTemplateId, alarm_template_json);
+//				}
+//			} else {
+//				return new JSONObject();
+//			}
+//		}
+//		return JSONObject.parseObject(alarm_template_json);
+	return new JSONObject();
+	}
+
 }
