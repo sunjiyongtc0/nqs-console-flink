@@ -19,30 +19,30 @@ public class ProbeServiceImpl implements ProbeService {
 
     @Override
     public TPProbe findById(String id) {
-        DataSourceType value = DataSourceType.mysql;
-        DataSourceContextHolder.setDataSource(value);
+//        DataSourceType value = DataSourceType.mysql;
+//        DataSourceContextHolder.setDataSource(value);
         TPProbe probe=tPProbeMapper.selectByPrimaryKey(id);
-        DataSourceContextHolder.clearDataSource();
+//        DataSourceContextHolder.clearDataSource();
         return probe;
     }
 
     @Override
     public void updateProbe(TPProbe tpProbe) {
-        DataSourceType value = DataSourceType.mysql;
-        DataSourceContextHolder.setDataSource(value);
+//        DataSourceType value = DataSourceType.mysql;
+//        DataSourceContextHolder.setDataSource(value);
         tPProbeMapper.updateByPrimaryKeySelective(tpProbe);
-        DataSourceContextHolder.clearDataSource();
+//        DataSourceContextHolder.clearDataSource();
     }
 
     @Override
     public int insertProbe(TPProbe tpProbe) {
-        DataSourceType value = DataSourceType.mysql;
-        DataSourceContextHolder.setDataSource(value);
+//        DataSourceType value = DataSourceType.mysql;
+//        DataSourceContextHolder.setDataSource(value);
         int count =0;
         if(tPProbeMapper.selectByPrimaryKey(tpProbe.getId())==null) {
             count = tPProbeMapper.insert(tpProbe);
         }
-        DataSourceContextHolder.clearDataSource();
+//        DataSourceContextHolder.clearDataSource();
         return count;
     }
 

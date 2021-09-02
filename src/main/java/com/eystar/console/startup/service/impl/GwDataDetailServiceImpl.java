@@ -4,6 +4,7 @@ import com.eystar.console.startup.entity.gwdata.*;
 import com.eystar.console.startup.mapper.*;
 import com.eystar.console.startup.service.GwDataDetailService;
 import com.eystar.console.startup.service.GwDataService;
+import com.eystar.console.startup.source.DataSource;
 import com.eystar.console.startup.source.DataSourceContextHolder;
 import com.eystar.console.startup.source.DataSourceType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +20,15 @@ public class GwDataDetailServiceImpl implements GwDataDetailService {
     private GwHttpDetailMapper gwHttpDetailMapper;
 
 
-    @Override
+    @DataSource(DataSourceType.bigdata)
     public int insertDataList(List<GwData> gwDataList) {
         int i=0;
-        DataSourceType value = DataSourceType.bigdata;
-        DataSourceContextHolder.setDataSource(value);
+//        DataSourceType value = DataSourceType.bigdata;
+//        DataSourceContextHolder.setDataSource(value);
         if(gwDataList.get(0) instanceof GwHttpDetailData){
             gwHttpDetailMapper.insertList(gwDataList);
         }
-        DataSourceContextHolder.clearDataSource();
+//        DataSourceContextHolder.clearDataSource();
         return i;
     }
 }

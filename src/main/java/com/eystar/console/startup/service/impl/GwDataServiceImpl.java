@@ -6,6 +6,7 @@ import com.eystar.console.startup.mapper.GwFlashMapper;
 import com.eystar.console.startup.mapper.GwHttpMapper;
 import com.eystar.console.startup.mapper.GwPingMapper;
 import com.eystar.console.startup.service.GwDataService;
+import com.eystar.console.startup.source.DataSource;
 import com.eystar.console.startup.source.DataSourceContextHolder;
 import com.eystar.console.startup.source.DataSourceType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,11 @@ public class GwDataServiceImpl implements GwDataService {
     @Autowired
     private GwPingMapper gwPingMapper;
 
-    @Override
+    @DataSource(DataSourceType.bigdata)
     public int insertData(GwData gwData) {
         int i=0;
-        DataSourceType value = DataSourceType.bigdata;
-        DataSourceContextHolder.setDataSource(value);
+//        DataSourceType value = DataSourceType.bigdata;
+//        DataSourceContextHolder.setDataSource(value);
         if(gwData instanceof GwPingData){
             System.out.println("GwPingData入库");
             i=gwPingMapper.insertSelective((GwPingData)gwData);
@@ -48,7 +49,7 @@ public class GwDataServiceImpl implements GwDataService {
             System.out.println("GwHttpData入库");
             i=gwHttpMapper.insertSelective((GwHttpData)gwData);
         }
-        DataSourceContextHolder.clearDataSource();
+//        DataSourceContextHolder.clearDataSource();
         return i;
     }
 }

@@ -21,47 +21,47 @@ public class ProbeAccessTypeServiceImpl implements ProbeAccessTypeService {
 
     @Override
     public List<TPProbeAccessType> selectByProbeId(String probeId) {
-        DataSourceType value = DataSourceType.mysql;
-        DataSourceContextHolder.setDataSource(value);
+//        DataSourceType value = DataSourceType.mysql;
+//        DataSourceContextHolder.setDataSource(value);
         List<TPProbeAccessType> lp=tpProbeAccessTypeMapper.selectByProbeId(probeId);
-        DataSourceContextHolder.clearDataSource();
+//        DataSourceContextHolder.clearDataSource();
         return lp;
     }
 
     @Override
     public TPProbeAccessType findByAccessType( String probeId,  String accessTypeName) {
-        DataSourceType value = DataSourceType.mysql;
-        DataSourceContextHolder.setDataSource(value);
+//        DataSourceType value = DataSourceType.mysql;
+//        DataSourceContextHolder.setDataSource(value);
         TPProbeAccessType p=tpProbeAccessTypeMapper.findByAccessType(probeId,accessTypeName);
-        DataSourceContextHolder.clearDataSource();
+//        DataSourceContextHolder.clearDataSource();
         return p;
     }
 
     @Override
     public int insert(TPProbeAccessType tpProbeAccessType) {
-        DataSourceType value = DataSourceType.mysql;
-        DataSourceContextHolder.setDataSource(value);
+//        DataSourceType value = DataSourceType.mysql;
+//        DataSourceContextHolder.setDataSource(value);
         int  p=tpProbeAccessTypeMapper.insertSelective(tpProbeAccessType);
-        DataSourceContextHolder.clearDataSource();
+//        DataSourceContextHolder.clearDataSource();
 
         return p;
     }
 
     @Override
     public int update(TPProbeAccessType tpProbeAccessType) {
-        DataSourceType value = DataSourceType.mysql;
-        DataSourceContextHolder.setDataSource(value);
+//        DataSourceType value = DataSourceType.mysql;
+//        DataSourceContextHolder.setDataSource(value);
         int  p=tpProbeAccessTypeMapper.updateByPrimaryKeySelective(tpProbeAccessType);
-        DataSourceContextHolder.clearDataSource();
+//        DataSourceContextHolder.clearDataSource();
 
         return p;
     }
 
     @Override
     public void deleteAccessTypeByName( String probeId, String accessTypeName) {
-        DataSourceType value = DataSourceType.mysql;
-        DataSourceContextHolder.setDataSource(value);
+//        DataSourceType value = DataSourceType.mysql;
+//        DataSourceContextHolder.setDataSource(value);
         tpProbeAccessTypeMapper.deleteAccessTypeByName(probeId,accessTypeName);
-        DataSourceContextHolder.clearDataSource();
+//        DataSourceContextHolder.clearDataSource();
     }
 }

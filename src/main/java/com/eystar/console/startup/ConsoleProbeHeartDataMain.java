@@ -23,8 +23,6 @@ public class ConsoleProbeHeartDataMain extends BaseFlink {
         topo.run(ParameterTool.fromArgs(args));
     }
 
-
-
     @Override
     public String getJobName() {
         return "ConsoleProbeHeartDataMain";
