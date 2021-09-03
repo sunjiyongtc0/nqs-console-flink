@@ -3,6 +3,7 @@ package com.eystar.console.startup.util;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.eystar.common.util.RedisModifyHelper;
+import com.eystar.common.util.XxlConfBean;
 import com.eystar.console.startup.cache.redis.util.RedisUtils;
 import com.eystar.console.startup.entity.TPProbe;
 import com.eystar.console.startup.entity.TPProbeAccessType;

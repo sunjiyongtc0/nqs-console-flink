@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.eystar.common.util.RedisModifyHelper;
 import com.eystar.common.util.UUIDKit;
+import com.eystar.common.util.XxlConfBean;
 import com.eystar.console.startup.cache.redis.util.RedisUtils;
 import com.eystar.console.startup.entity.CPHeartbeat;
 import com.eystar.console.startup.entity.TPProbe;
@@ -90,8 +91,7 @@ public class ProbeRegistThread {
 				taskSegJson.put("provinceCode", record.getProvinceCode()+"");
 				taskSegJson.put("cityCode", record.getCityCode()+"");
 				taskSegJson.put("districtCode", record.getDistrictCode()+"");
-				redisUtils.lpush("redis_queue_default_task", taskSegJson.toJSONString());
-
+				redisUtils.lpush(XxlConfBean.getXxlValueByString("gw-keys.redis.queue.default.task"), taskSegJson.toJSONString());
 				System.out.println("探针" + id + "注册完成，通知生成默认任务增量" + taskSegJson.toJSONString());
 
 				// 插入探针心跳记录到bigdata

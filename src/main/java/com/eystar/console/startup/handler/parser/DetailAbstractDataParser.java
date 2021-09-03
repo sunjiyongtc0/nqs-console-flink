@@ -10,7 +10,6 @@ import com.eystar.common.util.UUIDKit;
 import com.eystar.console.startup.entity.gwdata.GwData;
 import com.eystar.console.startup.entity.gwdata.GwHttpData;
 import com.eystar.console.startup.entity.gwdata.GwHttpDetailData;
-import com.eystar.console.startup.util.ChangeChar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +57,8 @@ public abstract class DetailAbstractDataParser extends AbstractDataParser {
 			JSONObject object = array.getJSONObject(i);
 			Set<String> keys= object.keySet();
 			for(String key:keys){
-				DetailDataJson.put(ChangeChar.camelToUnderline(key,1),object.get(key));
+				DetailDataJson.put(key,object.get(key));
+//				DetailDataJson.put(ChangeChar.camelToUnderline(key,1),object.get(key));
 			}
 			gwHttpDetailData=JSON.parseObject(DetailDataJson.toJSONString(),GwHttpDetailData.class);
 

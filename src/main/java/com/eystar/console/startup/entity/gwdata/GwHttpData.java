@@ -1,57 +1,82 @@
 package com.eystar.console.startup.entity.gwdata;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 
 public class GwHttpData  extends GwData implements Serializable {
 
+    @JSONField(name="real_ip")
     private String realIp;
 
+    @JSONField(name="jump_iplist")
     private String jumpIplist;
 
     private String detail;
 
+    @JSONField(name="tcp_cost")
     private Double tcpCost;
 
+    @JSONField(name="page_avg_speed")
     private Double pageAvgSpeed;
 
-
+    @JSONField(name="elements_localnet_rate")
     private Double elementsLocalnetRate;
 
+    @JSONField(name="elements_success_rate")
     private Double elementsSuccessRate;
 
+    @JSONField(name="ssl_cost")
     private Double sslCost;
 
+    @JSONField(name="dns_cost")
     private Double dnsCost;
 
+    @JSONField(name="element_load_cost")
     private Double elementLoadCost;
 
+
+    @JSONField(name="page_total_cost")
     private Double pageTotalCost;
 
+
+    @JSONField(name="first_byte_cost")
     private Double firstByteCost;
 
+    @JSONField(name="first_screen_cost")
     private Double firstScreenCost;
 
+    @JSONField(name="text_cost")
     private Double textCost;
 
+    @JSONField(name="avg_speed")
     private Double avgSpeed;
 
+    @JSONField(name="page_size")
     private Double pageSize;
 
+    @JSONField(name="trans_body_cost")
     private Double transBodyCost;
 
+    @JSONField(name="conn_cost")
     private Double connCost;
 
+    @JSONField(name="elements_sum")
     private Integer elementsSum;
 
+    @JSONField(name="elements_success_sum")
     private Integer elementsSuccessSum;
 
+    @JSONField(name="elements_fail_sum")
     private Integer elementsFailSum;
 
+    @JSONField(name="http_code")
     private Integer httpCode;
 
+    @JSONField(name="elements_localnet_sum")
     private Integer elementsLocalnetSum;
 
-    private Integer errorCode;
+
 
     @Override
     public String toString() {
@@ -79,7 +104,6 @@ public class GwHttpData  extends GwData implements Serializable {
                 ", elementsFailSum=" + elementsFailSum +
                 ", httpCode=" + httpCode +
                 ", elementsLocalnetSum=" + elementsLocalnetSum +
-                ", errorCode=" + errorCode +
                 '}';
     }
 
@@ -268,11 +292,5 @@ public class GwHttpData  extends GwData implements Serializable {
         this.elementsLocalnetSum = elementsLocalnetSum;
     }
 
-    public Integer getErrorCode() {
-        return errorCode;
-    }
 
-    public void setErrorCode(Integer errorCode) {
-        this.errorCode = errorCode;
-    }
 }

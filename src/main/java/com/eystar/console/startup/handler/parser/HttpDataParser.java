@@ -4,6 +4,7 @@ import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.eystar.common.util.NumberKit;
+import com.eystar.common.util.XxlConfBean;
 import com.eystar.console.startup.entity.gwdata.GwData;
 import com.eystar.console.startup.entity.gwdata.GwHttpData;
 
@@ -53,7 +54,7 @@ public class HttpDataParser extends DetailAbstractDataParser {
 			element_load_cost = 0d;
 		}
 		// 首屏时间
-		first_screen_cost = text_cost + element_load_cost * 0.8;
+		first_screen_cost = text_cost + element_load_cost * XxlConfBean.getXxlValueByDouble("gw-console.data.http.firstscreencost");
 		// 页面总时延（文本+元素）
 		page_total_cost = text_cost + element_load_cost;
 		// 首页下载速率（文本+元素/页面总时延）

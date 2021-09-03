@@ -7,10 +7,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eystar.common.util.IPHelper;
 import com.eystar.common.util.UUIDKit;
+import com.eystar.common.util.XxlConfBean;
 import com.eystar.console.startup.entity.gwdata.*;
 import com.eystar.console.startup.handler.message.DataMessage;
 import com.eystar.console.startup.kafka.KafkaMessageProducer;
-import com.eystar.console.startup.util.ChangeChar;
 import com.eystar.console.startup.util.InfoLoader;
 import com.eystar.console.startup.util.ScoreHelper;
 import org.slf4j.Logger;
@@ -35,22 +35,38 @@ public abstract class AbstractDataParser {
 		record.setTestTime( message.getTestTime());
 		// 封装探针信息
 		JSONObject probeJson = InfoLoader.loadProbe(message.getProbeId());
-		record.setProbeAlias( probeJson.getString(ChangeChar.underlineToCamel("probe_alias")));
-		record.setProbeName(probeJson.getString(ChangeChar.underlineToCamel("probe_name")));
-		record.setPppoeUsername( probeJson.getString(ChangeChar.underlineToCamel("pppoe_username")));
-		record.setLoid( probeJson.getString(ChangeChar.underlineToCamel("loid")));
-		record.setSerialNum( probeJson.getString(ChangeChar.underlineToCamel("sn")));
-		record.setProbeIp(probeJson.getString(ChangeChar.underlineToCamel("ip")));
-		record.setPc(probeJson.getString(ChangeChar.underlineToCamel("pc")));
-		record.setVendor(probeJson.getString(ChangeChar.underlineToCamel("vendor")));
-		record.setProvinceName(probeJson.getString(ChangeChar.underlineToCamel("province_name")));
-		record.setProvinceCode(probeJson.getLong(ChangeChar.underlineToCamel("province_code")));
-		record.setCityName(probeJson.getString(ChangeChar.underlineToCamel("city_name")));
-		record.setCityCode(probeJson.getLong(ChangeChar.underlineToCamel("city_code")));
-		record.setDistrictName( probeJson.getString(ChangeChar.underlineToCamel("district_name")));
-		record.setDistrictCode(probeJson.getLong(ChangeChar.underlineToCamel("district_code")));
-		record.setTownName(probeJson.getString(ChangeChar.underlineToCamel("town_name")));
-		record.setTownCode( probeJson.getLong(ChangeChar.underlineToCamel("town_code")));
+		record.setProbeAlias( probeJson.getString("probe_alias"));
+		record.setProbeName(probeJson.getString("probe_name"));
+		record.setPppoeUsername( probeJson.getString("pppoe_username"));
+		record.setLoid( probeJson.getString("loid"));
+		record.setSerialNum( probeJson.getString("sn"));
+		record.setProbeIp(probeJson.getString("ip"));
+		record.setPc(probeJson.getString("pc"));
+		record.setVendor(probeJson.getString("vendor"));
+		record.setProvinceName(probeJson.getString("province_name"));
+		record.setProvinceCode(probeJson.getLong("province_code"));
+		record.setCityName(probeJson.getString("city_name"));
+		record.setCityCode(probeJson.getLong("city_code"));
+		record.setDistrictName( probeJson.getString("district_name"));
+		record.setDistrictCode(probeJson.getLong("district_code"));
+		record.setTownName(probeJson.getString("town_name"));
+		record.setTownCode( probeJson.getLong("town_code"));
+//		record.setProbeAlias( probeJson.getString(ChangeChar.underlineToCamel("probe_alias")));
+//		record.setProbeName(probeJson.getString(ChangeChar.underlineToCamel("probe_name")));
+//		record.setPppoeUsername( probeJson.getString(ChangeChar.underlineToCamel("pppoe_username")));
+//		record.setLoid( probeJson.getString(ChangeChar.underlineToCamel("loid")));
+//		record.setSerialNum( probeJson.getString(ChangeChar.underlineToCamel("sn")));
+//		record.setProbeIp(probeJson.getString(ChangeChar.underlineToCamel("ip")));
+//		record.setPc(probeJson.getString(ChangeChar.underlineToCamel("pc")));
+//		record.setVendor(probeJson.getString(ChangeChar.underlineToCamel("vendor")));
+//		record.setProvinceName(probeJson.getString(ChangeChar.underlineToCamel("province_name")));
+//		record.setProvinceCode(probeJson.getLong(ChangeChar.underlineToCamel("province_code")));
+//		record.setCityName(probeJson.getString(ChangeChar.underlineToCamel("city_name")));
+//		record.setCityCode(probeJson.getLong(ChangeChar.underlineToCamel("city_code")));
+//		record.setDistrictName( probeJson.getString(ChangeChar.underlineToCamel("district_name")));
+//		record.setDistrictCode(probeJson.getLong(ChangeChar.underlineToCamel("district_code")));
+//		record.setTownName(probeJson.getString(ChangeChar.underlineToCamel("town_name")));
+//		record.setTownCode( probeJson.getLong(ChangeChar.underlineToCamel("town_code")));
 		// 封装更多时间标签
 		Date date = new Date(message.getTestTime() * 1000);
 		record.setTestTimeH( DateUtil.beginOfDay(date).getTime() / 1000 + DateUtil.hour(date, true) * 3600);
@@ -110,7 +126,8 @@ public abstract class AbstractDataParser {
 			JSONObject jsonGwData = (JSONObject) JSON.toJSON(record);
 			Field[] fields=getGwData(message.getTaskTypeName()).getDeclaredFields();
 			for(int i=0;i<fields.length;i++){
-				jsonGwData.put(fields[i].getName(),MsgJson.get(ChangeChar.camelToUnderline(fields[i].getName(),1)));
+				jsonGwData.put(fields[i].getName(),MsgJson.get(fields[i].getName()));
+//				jsonGwData.put(fields[i].getName(),MsgJson.get(ChangeChar.camelToUnderline(fields[i].getName(),1)));
 			}
 			GwData gdTask=JSON.parseObject(jsonGwData.toJSONString(),getGwData(message.getTaskTypeName()));
 			prepare(gdTask);
@@ -161,7 +178,7 @@ public abstract class AbstractDataParser {
 				}
 			}
 		}
-		KafkaMessageProducer.send("data_saved",saveRecordJson.toJSONString());
+		KafkaMessageProducer.send(XxlConfBean.getXxlValueByString("gw-console.kafka.topic.data.saved"),saveRecordJson.toJSONString());
 	}
 
 	public abstract void after(GwData record);

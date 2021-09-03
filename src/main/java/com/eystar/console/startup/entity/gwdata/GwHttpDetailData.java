@@ -1,47 +1,64 @@
 package com.eystar.console.startup.entity.gwdata;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 
 public class GwHttpDetailData extends GwData implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-
+    @JSONField(name="parent_id")
     private String parentId;
 
+    @JSONField(name="element_name")
     private String elementName;
 
+    @JSONField(name="element_num")
     private Integer elementNum;
 
+    @JSONField(name="element_url")
     private String elementUrl;
 
+    @JSONField(name="dns_cost")
     private Double dnsCost;
 
+    @JSONField(name="conn_cost")
     private Double connCost;
 
+    @JSONField(name="element_download_cost")
     private Double elementDownloadCost;
 
+    @JSONField(name="first_byte_cost")
     private Double firstByteCost;
 
+    @JSONField(name="element_total_cost")
     private Double elementTotalCost;
 
+    @JSONField(name="thread_num")
     private Long threadNum;
 
+    @JSONField(name="element_status")
     private Integer elementStatus;
 
+    @JSONField(name="element_size")
     private Double elementSize;
 
+    @JSONField(name="avg_speed")
     private Double avgSpeed;
 
+    @JSONField(name="element_http_code")
     private Integer elementHttpCode;
 
+    @JSONField(name="is_localnet")
     private Integer isLocalnet;
 
+    @JSONField(name="tcp_cost")
     private Double tcpCost;
 
+    @JSONField(name="ssl_cost")
     private Double sslCost;
 
-    private Integer errorCode;
 
 
     @Override
@@ -64,7 +81,6 @@ public class GwHttpDetailData extends GwData implements Serializable {
                 ", isLocalnet=" + isLocalnet +
                 ", tcpCost=" + tcpCost +
                 ", sslCost=" + sslCost +
-                ", errorCode=" + errorCode +
                 '}';
     }
 
@@ -204,11 +220,5 @@ public class GwHttpDetailData extends GwData implements Serializable {
         this.sslCost = sslCost;
     }
 
-    public Integer getErrorCode() {
-        return errorCode;
-    }
 
-    public void setErrorCode(Integer errorCode) {
-        this.errorCode = errorCode;
-    }
 }

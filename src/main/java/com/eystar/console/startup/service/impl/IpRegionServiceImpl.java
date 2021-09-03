@@ -1,7 +1,6 @@
 package com.eystar.console.startup.service.impl;
 
 import com.eystar.console.startup.entity.TMIpRegion;
-import com.eystar.console.startup.entity.TPProbe;
 import com.eystar.console.startup.mapper.TMIpRegionMapper;
 import com.eystar.console.startup.service.IpRegionService;
 import org.springframework.beans.factory.annotation.Autowired;

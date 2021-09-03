@@ -109,17 +109,27 @@ public abstract class BaseFlink {
 
     protected DataStream<String> getKafkaSpout(String topic) {
 
-        String bootstrapServers = properties.getProperty("bootstrap.servers", "");
-        String port = properties.getProperty("kafka.offset.Port", "");
+        String kafkaServers = properties.getProperty("kafka.servers", "");
+        String kafkaPort = properties.getProperty("kafka.port", "");
+        String kafkaUsername = properties.getProperty("kafka.username", "");
+        String kafkaPassword = properties.getProperty("kafka.password", "");
+        String kafkaSecurityProtocol = properties.getProperty("kafka.security.protocol", "");
+        String kafkaSaslMechanism = properties.getProperty("kafka.sasl.mechanism", "");
 
         String id = StringUtils.join(getJobName(), "-", topic);
-        Properties properties = new Properties();
-        properties.setProperty("bootstrap.servers", bootstrapServers + ":" + port);
-        properties.setProperty("group.id", id);
-        FlinkKafkaConsumer<String> stringFlinkKafkaConsumer = new FlinkKafkaConsumer<String>(topic, new SimpleStringSchema(), properties);
+        Properties props = new Properties();
+        props.put("group.id", id);
+        props.put("enable.auto.commit", "true");
+        props.put("auto.commit.interval.ms", "1000");
+        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("bootstrap.servers", kafkaServers+":"+kafkaPort);
+        props.put("sasl.jaas.config", "org.apache.kafka.common.security.scram.ScramLoginModule required username=\""+kafkaUsername+"\" password=\""+kafkaPassword+"\";");
+        props.put("security.protocol", kafkaSecurityProtocol);
+        props.put("sasl.mechanism", kafkaSaslMechanism);
+        FlinkKafkaConsumer<String> stringFlinkKafkaConsumer = new FlinkKafkaConsumer<String>(topic, new SimpleStringSchema(), props);
         return env.addSource(stringFlinkKafkaConsumer);
     }
-
 
 
     public abstract String getJobName();
@@ -135,11 +145,9 @@ public abstract class BaseFlink {
 
 
     public void run(ParameterTool params) throws Exception {
-
         init(params);
         setupConfig();
         createTopology(env);
-
         String topoName = StringUtils.join(getJobName(), "-", new DateTime().toString("yyyyMMdd-HHmmss"));
         env.execute(topoName);
     }

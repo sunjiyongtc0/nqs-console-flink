@@ -5,9 +5,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.eystar.common.util.RedisModifyHelper;
 import com.eystar.common.util.UUIDKit;
+import com.eystar.common.util.XxlConfBean;
 import com.eystar.console.startup.cache.redis.util.RedisUtils;
 import com.eystar.console.startup.entity.CPPinfo;
-import com.eystar.console.startup.entity.CPPinfoReal;
 import com.eystar.console.startup.env.BeanFactory;
 import com.eystar.console.startup.handler.message.GwInfoMessage;
 import com.eystar.console.startup.handler.probe.ProbeClickHouseHelper;
@@ -37,7 +37,7 @@ public class ProbeClickHouseSink extends RichSinkFunction<GwInfoMessage> {
     private ProbeAccessTypeService probeAccessTypeService;
     private ProbeService probeService;
     private TrafficService trafficService;
-
+    private XxlConfBean xxlConfBean;
     private PPonService pPonService;
     private PStatusService pStatusService;
 
@@ -58,18 +58,28 @@ public class ProbeClickHouseSink extends RichSinkFunction<GwInfoMessage> {
         trafficService=beanFactory.getBean(TrafficServiceImpl.class);
         pPonService = beanFactory.getBean(  PPonServiceImpl.class);
         pStatusService = beanFactory.getBean(PStatusServiceImpl.class);
-
+        xxlConfBean= beanFactory.getBean(XxlConfBean.class);
         //初始化工具类数据
         InfoLoader.init(redisUtils,probeService);
         RedisModifyHelper.init(redisUtils);
         ProbeInfoThread.init(redisUtils,probeService);
         ProbeClickHouseHelper.init(redisUtils,probeAccessTypeService,trafficService,pPonService,pStatusService);
-
+        xxlConfBean.init();
     }
 
     @Override
     public void invoke(GwInfoMessage message, Context context) throws Exception {
         try {
+            if (message.getTestTime() == 0) {
+                Long time = message.getMsgJson().getLongValue("time"); // 这个时间是探针上报的时间
+                // 如果时间是3天前的数据，可能就是探针上时间不准导致，这个时候将上报的时间改为当前时间
+                if (Math.abs(System.currentTimeMillis() / 1000 - time) > xxlConfBean.getXxlValueByLong("gw-console.probe.time.offset")) {
+                    time = System.currentTimeMillis() / 1000;
+                }
+                message.setTestTime(time);
+            }
+
+
             String probeId = message.getProbeId();
             long time = message.getTestTime();
             // 保存 网关状态信息、PON口状态、WAN口信息到probe表

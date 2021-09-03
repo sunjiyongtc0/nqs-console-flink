@@ -1,5 +1,6 @@
 package com.eystar.console.startup.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -11,21 +12,27 @@ public class TMIpRegion implements Serializable {
     @ApiModelProperty(value = "ip")
     private String ip;
 
+    @JSONField(name="province_code")
     @ApiModelProperty(value = "省")
     private String provinceCode;
 
+    @JSONField(name="province_name")
     @ApiModelProperty(value = "省")
     private String provinceName;
 
+    @JSONField(name="city_code")
     @ApiModelProperty(value = "市")
     private String cityCode;
 
+    @JSONField(name="city_name")
     @ApiModelProperty(value = "市")
     private String cityName;
 
+    @JSONField(name="district_code")
     @ApiModelProperty(value = "区")
     private String districtCode;
 
+    @JSONField(name="district_name")
     @ApiModelProperty(value = "区")
     private String districtName;
 
@@ -43,23 +50,31 @@ public class TMIpRegion implements Serializable {
     @ApiModelProperty(value = "0-添加或者倒入，10-brasip")
     private Short type;
 
+    @JSONField(name="attachment_id")
     @ApiModelProperty(value = "附件ID")
     private String attachmentId;
 
+    @JSONField(name="create_user")
     @ApiModelProperty(value = "创建人")
     private String createUser;
 
+    @JSONField(name="update_user")
     @ApiModelProperty(value = "更新人")
     private String updateUser;
 
+    @JSONField(name="create_time")
     @ApiModelProperty(value = "创建时间")
     private Long createTime;
 
+    @JSONField(name="update_time")
     @ApiModelProperty(value = "更新时间")
     private Long updateTime;
 
+    @JSONField(name="delete_flag")
     @ApiModelProperty(value = "是否删除（1-是，0-否）")
     private Short deleteFlag;
+
+
 
     private static final long serialVersionUID = 1L;
 

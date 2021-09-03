@@ -1,17 +1,20 @@
 package com.eystar.console.startup.entity.gwdata;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.util.Date;
 
 public class GwDnsData extends  GwData implements Serializable {
 
 
+    @JSONField(name="time_cost")
     private Double timeCost;
 
+    @JSONField(name="success_rate")
     private Double successRate;
 
     private String detail;
-    private Integer errorCode;
 
     public Double getTimeCost() {
         return timeCost;
@@ -37,12 +40,6 @@ public class GwDnsData extends  GwData implements Serializable {
         this.detail = detail;
     }
 
-    public Integer getErrorCode() {
-        return errorCode;
-    }
 
-    public void setErrorCode(Integer errorCode) {
-        this.errorCode = errorCode;
-    }
 
 }

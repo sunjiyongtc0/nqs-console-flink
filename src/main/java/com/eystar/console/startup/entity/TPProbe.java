@@ -1,5 +1,6 @@
 package com.eystar.console.startup.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -8,9 +9,11 @@ public class TPProbe implements Serializable {
 
     private String id;
 
+    @JSONField(name="probe_name")
     @ApiModelProperty(value = "探针名称(探针上报)")
     private String probeName;
 
+    @JSONField(name="probe_alias")
     @ApiModelProperty(value = "探针别名（页面展示所用）")
     private String probeAlias;
 
@@ -20,6 +23,7 @@ public class TPProbe implements Serializable {
     @ApiModelProperty(value = "IP（插件）")
     private String ip;
 
+    @JSONField(name="internet_ip")
     @ApiModelProperty(value = "网关通信接口携带ip（webs中获取的）")
     private String internetIp;
 
@@ -29,45 +33,59 @@ public class TPProbe implements Serializable {
     @ApiModelProperty(value = "运营商编码（10-联通，20-移动，30-电信）（插件）")
     private Short operator;
 
+    @JSONField(name="soft_ver")
     @ApiModelProperty(value = "软件版本（插件）")
     private String softVer;
 
+    @JSONField(name="hb_interval")
     @ApiModelProperty(value = "心跳间隔（秒）（插件）")
     private Integer hbInterval;
 
+    @JSONField(name="log_interval")
     @ApiModelProperty(value = "日志上报间隔（秒）")
     private Integer logInterval;
 
+    @JSONField(name="data_interval")
     @ApiModelProperty(value = "数据上报间隔（秒）")
     private Integer dataInterval;
 
+    @JSONField(name="flow_interval")
     @ApiModelProperty(value = "流量采集间隔（秒）")
     private Integer flowInterval;
 
+    @JSONField(name="info_interval")
     @ApiModelProperty(value = "设备信息上报间隔（秒）")
     private Integer infoInterval;
 
+    @JSONField(name="last_regist_time")
     @ApiModelProperty(value = "最后注册时间（秒）（插件）")
     private Long lastRegistTime;
 
+    @JSONField(name="last_heartbeat_time")
     @ApiModelProperty(value = "最后心跳时间（秒）")
     private Long lastHeartbeatTime;
 
+    @JSONField(name="mq_url")
     @ApiModelProperty(value = "mq地址")
     private String mqUrl;
 
+    @JSONField(name="communicate_url")
     @ApiModelProperty(value = "通信地址")
     private String communicateUrl;
 
+
+    @JSONField(name="flash_server_url")
     @ApiModelProperty(value = "flash代理地址")
     private String flashServerUrl;
 
+    @JSONField(name="auth_url")
     @ApiModelProperty(value = "认证地址")
     private String authUrl;
 
     @ApiModelProperty(value = "描述（插件）")
     private String memo;
 
+    @JSONField(name="task_num")
     @ApiModelProperty(value = "探针上的任务数（插件），平台计算的")
     private Integer taskNum;
 
@@ -83,48 +101,61 @@ public class TPProbe implements Serializable {
     @ApiModelProperty(value = "设备型号（固件）")
     private String pc;
 
+    @JSONField(name="ram_size")
     @ApiModelProperty(value = "内存大小，单位（Mbytes）（固件）")
     private Float ramSize;
 
+    @JSONField(name="flash_size")
     @ApiModelProperty(value = "Flash 大小，单位（Mbytes）（固件）")
     private Float flashSize;
 
     @ApiModelProperty(value = "获取设备MAC（可作为设备标识）（固件）")
     private String mac;
 
+    @JSONField(name="firm_ver")
     @ApiModelProperty(value = "光猫软件版本（固件）")
     private String firmVer;
 
+    @JSONField(name="hard_ver")
     @ApiModelProperty(value = "光猫硬件版本（固件）")
     private String hardVer;
 
     @ApiModelProperty(value = "cpu厂商和型号（固件）")
     private String cpu;
 
+    @JSONField(name="province_code")
     @ApiModelProperty(value = "省编码")
     private Long provinceCode;
 
+    @JSONField(name="province_name")
     @ApiModelProperty(value = "省名称")
     private String provinceName;
 
+    @JSONField(name="city_code")
     @ApiModelProperty(value = "市编码")
     private Long cityCode;
 
+    @JSONField(name="city_name")
     @ApiModelProperty(value = "市名称")
     private String cityName;
 
+    @JSONField(name="district_code")
     @ApiModelProperty(value = "区县编码")
     private Long districtCode;
 
+    @JSONField(name="district_name")
     @ApiModelProperty(value = "区县名称")
     private String districtName;
 
+    @JSONField(name="town_code")
     @ApiModelProperty(value = "乡镇编码")
     private Long townCode;
 
+    @JSONField(name="town_name")
     @ApiModelProperty(value = "乡镇名称")
     private String townName;
 
+    @JSONField(name="region_path")
     @ApiModelProperty(value = "地域path路径")
     private String regionPath;
 
@@ -137,46 +168,61 @@ public class TPProbe implements Serializable {
     @ApiModelProperty(value = "维度")
     private Float lng;
 
+    @JSONField(name="bras_ip")
     private String brasIp;
 
+    @JSONField(name="cr_ip")
     private String crIp;
 
+    @JSONField(name="nat_ip")
     @ApiModelProperty(value = "网关NAT的IP地址")
     private String natIp;
 
+    @JSONField(name="olt_ip")
     @ApiModelProperty(value = "网关OLT的IP地址")
     private String oltIp;
 
+    @JSONField(name="so_ver")
     @ApiModelProperty(value = "网关插件so版本")
     private String soVer;
 
+    @JSONField(name="task_queue_size")
     @ApiModelProperty(value = "当前网关插件待执行的任务数量")
     private Integer taskQueueSize;
 
+    @JSONField(name="task_size")
     @ApiModelProperty(value = "当前网关插件所有任务数，探针上报的")
     private Integer taskSize;
 
+    @JSONField(name="cpu_rate")
     @ApiModelProperty(value = "cpu使用率")
     private Float cpuRate;
 
+    @JSONField(name="ram_rate")
     @ApiModelProperty(value = "内存利用率")
     private Float ramRate;
 
+    @JSONField(name="pppoe_username")
     @ApiModelProperty(value = "拨号用户帐号")
     private String pppoeUsername;
 
+    @JSONField(name="create_user")
     @ApiModelProperty(value = "创建用户名")
     private String createUser;
 
+    @JSONField(name="update_user")
     @ApiModelProperty(value = "修改用户名")
     private String updateUser;
 
+    @JSONField(name="create_time")
     @ApiModelProperty(value = "创建时间（Unix时间戳）")
     private Long createTime;
 
+    @JSONField(name="update_time")
     @ApiModelProperty(value = "修改时间（Unix时间戳）")
     private Long updateTime;
 
+    @JSONField(name="delete_flag")
     @ApiModelProperty(value = "是否删除（1-是，0-否）")
     private Short deleteFlag;
 

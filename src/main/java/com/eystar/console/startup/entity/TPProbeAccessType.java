@@ -1,5 +1,6 @@
 package com.eystar.console.startup.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -7,12 +8,15 @@ import java.io.Serializable;
 public class TPProbeAccessType implements Serializable {
     private String id;
 
+    @JSONField(name="probe_id")
     @ApiModelProperty(value = "探针id")
     private String probeId;
 
+    @JSONField(name="access_type_name")
     @ApiModelProperty(value = "接入类型名称")
     private String accessTypeName;
 
+    @JSONField(name="is_default")
     @ApiModelProperty(value = "探针默认测试端口 1-是，0-否")
     private Short isDefault;
 
@@ -31,12 +35,14 @@ public class TPProbeAccessType implements Serializable {
     @ApiModelProperty(value = "网关")
     private String gateway;
 
+    @JSONField(name="link_type")
     @ApiModelProperty(value = "网口连接方式")
     private String linkType;
 
     @ApiModelProperty(value = "网口号")
     private String no;
 
+    @JSONField(name="connect_status")
     @ApiModelProperty(value = "连接状态")
     private String connectStatus;
 

@@ -4,7 +4,6 @@ import com.eystar.console.startup.entity.CPStatus;
 import com.eystar.console.startup.mapper.CPStatusMapper;
 import com.eystar.console.startup.service.PStatusService;
 import com.eystar.console.startup.source.DataSource;
-import com.eystar.console.startup.source.DataSourceContextHolder;
 import com.eystar.console.startup.source.DataSourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +16,7 @@ public class PStatusServiceImpl implements PStatusService {
 
     @DataSource(DataSourceType.bigdata)
     public int insert(CPStatus cpStatus){
-//        DataSourceType value = DataSourceType.bigdata;
-//        DataSourceContextHolder.setDataSource(value);
         int cph= cpStatusMapper.insertSelective(cpStatus);
-//        DataSourceContextHolder.clearDataSource();
         return cph;
     }
 }

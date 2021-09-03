@@ -1,45 +1,55 @@
 package com.eystar.console.startup.entity.gwdata;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 
 public class GwFlashData extends  GwData implements Serializable {
 
+
+    @JSONField(name="real_url")
     private String realUrl;
 
-    private String hostIp;
-
+    @JSONField(name="conn_cost")
     private Double connCost;
 
+    @JSONField(name="dns_cost")
     private Double dnsCost;
 
+    @JSONField(name="buffer_cost")
     private Double bufferCost;
 
+    @JSONField(name="content_size")
     private Double contentSize;
 
+    @JSONField(name="avg_speed")
     private Double avgSpeed;
 
+    @JSONField(name="first_byte_cost")
     private Double firstByteCost;
 
+    @JSONField(name="first_pause_cost")
     private Double firstPauseCost;
 
     private Double bitrate;
 
+    @JSONField(name="play_duration")
     private Double playDuration;
 
+    @JSONField(name="pause_cost")
     private Double pauseCost;
 
+    @JSONField(name="pause_count")
     private Double pauseCount;
 
+    @JSONField(name="carlton_rate")
     private Double carltonRate;
 
-
-    private Integer errorCode;
 
     @Override
     public String toString() {
         return "GwFlashData{" +
                 "realUrl='" + realUrl + '\'' +
-                ", hostIp='" + hostIp + '\'' +
                 ", connCost=" + connCost +
                 ", dnsCost=" + dnsCost +
                 ", bufferCost=" + bufferCost +
@@ -52,7 +62,6 @@ public class GwFlashData extends  GwData implements Serializable {
                 ", pauseCost=" + pauseCost +
                 ", pauseCount=" + pauseCount +
                 ", carltonRate=" + carltonRate +
-                ", errorCode=" + errorCode +
                 '}';
     }
 
@@ -62,16 +71,6 @@ public class GwFlashData extends  GwData implements Serializable {
 
     public void setRealUrl(String realUrl) {
         this.realUrl = realUrl;
-    }
-
-    @Override
-    public String getHostIp() {
-        return hostIp;
-    }
-
-    @Override
-    public void setHostIp(String hostIp) {
-        this.hostIp = hostIp;
     }
 
     public Double getConnCost() {
@@ -172,11 +171,4 @@ public class GwFlashData extends  GwData implements Serializable {
 
 
 
-    public Integer getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(Integer errorCode) {
-        this.errorCode = errorCode;
-    }
 }

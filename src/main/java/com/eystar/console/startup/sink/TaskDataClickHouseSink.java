@@ -1,18 +1,14 @@
 package com.eystar.console.startup.sink;
 
-import com.alibaba.fastjson.JSONObject;
 import com.eystar.common.util.IPHelper;
 import com.eystar.common.util.RedisModifyHelper;
-import com.eystar.common.util.UUIDKit;
+import com.eystar.common.util.XxlConfBean;
 import com.eystar.console.startup.cache.redis.util.RedisUtils;
-import com.eystar.console.startup.entity.gwdata.GwData;
 import com.eystar.console.startup.env.BeanFactory;
 import com.eystar.console.startup.handler.message.DataMessage;
 import com.eystar.console.startup.handler.parser.AbstractDataParser;
 import com.eystar.console.startup.handler.parser.DataParserHelper;
 import com.eystar.console.startup.handler.parser.ParserContext;
-import com.eystar.console.startup.handler.probe.ProbeAccessTypeHelper;
-import com.eystar.console.startup.handler.thread.ProbeRegistThread;
 import com.eystar.console.startup.service.*;
 import com.eystar.console.startup.service.impl.*;
 import com.eystar.console.startup.util.InfoLoader;
@@ -38,7 +34,7 @@ public class TaskDataClickHouseSink extends RichSinkFunction<DataMessage> {
     private TaskParamService taskParamService;
     private GwDataService gwDataService;
     private GwDataDetailService gwDataDetailService;
-
+    private XxlConfBean xxlConfBean;
     protected ApplicationContext beanFactory;
 
     @Override
@@ -56,6 +52,7 @@ public class TaskDataClickHouseSink extends RichSinkFunction<DataMessage> {
         taskParamService=beanFactory.getBean(TaskParamServiceImpl.class);
         gwDataService=beanFactory.getBean(GwDataServiceImpl.class);
         gwDataDetailService=beanFactory.getBean(GwDataDetailServiceImpl.class);
+        xxlConfBean= beanFactory.getBean(XxlConfBean.class);
         //初始化工具类数据
         InfoLoader.init(redisUtils,probeService);
         InfoLoader.taskInit(taskSrcDesService,taskParamService);
@@ -63,10 +60,20 @@ public class TaskDataClickHouseSink extends RichSinkFunction<DataMessage> {
         RedisModifyHelper.init(redisUtils);
         DataParserHelper.init(gwDataService,gwDataDetailService);
         ParserContext.init();
+        xxlConfBean.init();
     }
 
     @Override
     public void invoke(DataMessage message, Context context) throws Exception {
+        if (message.getTestTime() == 0) {
+            Long time = message.getMsgJson().getLongValue("time"); // 这个时间是探针上报的时间
+            // 如果时间是3天前的数据，可能就是探针上时间不准导致，这个时候将上报的时间改为当前时间
+            if (Math.abs(System.currentTimeMillis() / 1000 - time) > xxlConfBean.getXxlValueByLong("gw-console.probe.time.offset")) {
+                time = System.currentTimeMillis() / 1000;
+            }
+            message.setTestTime(time);
+        }
+
         long start1 = System.currentTimeMillis();
         AbstractDataParser parser = ParserContext.getDataItemParser(message.getTaskTypeName());
         parser.process(message);

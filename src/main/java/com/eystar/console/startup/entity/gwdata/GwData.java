@@ -1,5 +1,7 @@
 package com.eystar.console.startup.entity.gwdata;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -9,49 +11,130 @@ public class GwData   implements Serializable {
 
 
     private String id;
+
+    @JSONField(name="probe_id")
     private String probeId;
+
+    @JSONField(name="probe_name")
     private String probeName;
+
+    @JSONField(name="probe_ip")
     private String probeIp;
+
+    @JSONField(name="probe_alias")
     private String probeAlias;
+
+    @JSONField(name="pppoe_username")
     private String pppoeUsername;
+
     private String vendor;
     private String pc;
     private String loid;
+
+    @JSONField(name="serial_num")
     private String serialNum;
+
+    @JSONField(name="task_param_id")
     private String taskParamId;
+
+    @JSONField(name="task_param_name")
     private String taskParamName;
+
+    @JSONField(name="task_type_name")
     private String taskTypeName;
+
+    @JSONField(name="task_id")
     private String taskId;
+
+    @JSONField(name="task_md5")
     private String taskMd5;
+
+    @JSONField(name="access_type_name")
     private String accessTypeName;
+
+    @JSONField(name="test_time")
     private Long testTime;
+
+    @JSONField(name="test_time_d")
     private Long testTimeD;
+
+    @JSONField(name="test_time_h")
     private Long testTimeH;
+
+    @JSONField(name="test_time_m")
     private Long testTimeM;
+
+    @JSONField(name="test_time_w")
     private Long testTimeW;
+
+    @JSONField(name="dest_id")
     private String destId;
+
+    @JSONField(name="dest_name")
     private String destName;
+
+    @JSONField(name="dest_addr")
     private String destAddr;
+
+    @JSONField(name="province_code")
     private Long provinceCode;
+
+    @JSONField(name="province_name")
     private String provinceName;
+
+    @JSONField(name="city_code")
     private Long cityCode;
+
+    @JSONField(name="city_name")
     private String cityName;
+
+    @JSONField(name="district_code")
     private Long districtCode;
+
+    @JSONField(name="district_name")
     private String districtName;
+
+    @JSONField(name="town_code")
     private Long townCode;
+
+    @JSONField(name="town_name")
     private String townName;
+
+    @JSONField(name="task_from")
     private Integer taskFrom;
+
+    @JSONField(name="host_province")
     private String hostProvince;
+
+    @JSONField(name="host_city")
     private String hostCity;
+
     private String operator;
+
+    @JSONField(name="net_type")
     private Integer netType;
+
+    @JSONField(name="is_alarm")
     private Integer isAlarm;
+
+    @JSONField(name="alarm_info")
     private String alarmInfo;
     private Double score;
+
+    @JSONField(name="host_ip")
     private String hostIp;
 
+
+    @JSONField(name="error_code")
+    private Integer errorCode;
+
+
+    @JSONField(name="create_time")
     private Long createTime;
+
+    @JSONField(name="month_time")
     private Date monthTime;
+
     @Override
     public String toString() {
         return "GwData{" +
@@ -416,6 +499,14 @@ public class GwData   implements Serializable {
 
     public void setIsAlarm(Integer isAlarm) {
         this.isAlarm = isAlarm;
+    }
+
+    public Integer getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(Integer errorCode) {
+        this.errorCode = errorCode;
     }
 
     public Long getCreateTime() {

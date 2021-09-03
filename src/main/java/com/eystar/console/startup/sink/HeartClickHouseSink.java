@@ -3,10 +3,7 @@ package com.eystar.console.startup.sink;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.eystar.common.util.Constants;
-import com.eystar.common.util.IPHelper;
-import com.eystar.common.util.RedisModifyHelper;
-import com.eystar.common.util.UUIDKit;
+import com.eystar.common.util.*;
 import com.eystar.console.startup.cache.redis.util.RedisUtils;
 import com.eystar.console.startup.entity.CPHeartbeat;
 import com.eystar.console.startup.entity.TPProbe;
@@ -42,6 +39,7 @@ public class HeartClickHouseSink extends RichSinkFunction<HeartBeatMessage> {
 
     private HeartbeatService heartbeatService;
 
+    private XxlConfBean xxlConfBean;
 
     private ProbeAccessTypeService probeAccessTypeService;
 
@@ -59,22 +57,34 @@ public class HeartClickHouseSink extends RichSinkFunction<HeartBeatMessage> {
         pdcRegionService = beanFactory.getBean(PdcRegionServiceImpl.class);
         heartbeatService = beanFactory.getBean(HeartbeatServiceImpl.class);
         probeAccessTypeService = beanFactory.getBean(ProbeAccessTypeServiceImpl.class);
+        xxlConfBean= beanFactory.getBean(XxlConfBean.class);
+
         //初始化工具类数据
         InfoLoader.init(redisUtils,probeService);
         IPHelper.init(redisUtils,ipRegionService,pdcRegionService);
         RedisModifyHelper.init(redisUtils);
         ProbeRegistThread.init(probeService,redisUtils,heartbeatService);
         ProbeAccessTypeHelper.init(redisUtils,probeAccessTypeService);
+        xxlConfBean.init();
     }
 
     @Override
     public void invoke(HeartBeatMessage message, Context context) throws Exception {
+        if (message.getTestTime() == 0) {
+            Long time = message.getMsgJson().getLongValue("time"); // 这个时间是探针上报的时间
+            // 如果时间是3天前的数据，可能就是探针上时间不准导致，这个时候将上报的时间改为当前时间
+				if (Math.abs(System.currentTimeMillis() / 1000 - time) > xxlConfBean.getXxlValueByLong("gw-console.probe.time.offset")) {
+                time = System.currentTimeMillis() / 1000;
+            }
+            message.setTestTime(time);
+        }
+
         JSONObject infoObj = message.getInfoJson();
         String probeId = message.getProbeId();
         JSONObject probeInfo = InfoLoader.loadProbe(probeId);
         if (probeInfo == null || probeInfo.isEmpty()) {
              ProbeRegistThread.run(message);
-
+             return;
         }else {
             TPProbe probe = new TPProbe();
             probe.setId(probeId);

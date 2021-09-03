@@ -1,5 +1,7 @@
 package com.eystar.console.startup.entity.gwdata;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -9,9 +11,9 @@ public class GwPingData extends GwData implements Serializable {
 
     private Double jitter;
 
+    @JSONField(name="lost_rate")
     private Double lostRate;
 
-    private Integer errorCode;
 
 
 
@@ -40,13 +42,7 @@ public class GwPingData extends GwData implements Serializable {
     }
 
 
-    public Integer getErrorCode() {
-        return errorCode;
-    }
 
-    public void setErrorCode(Integer errorCode) {
-        this.errorCode = errorCode;
-    }
 
     @Override
     public String toString() {
@@ -61,7 +57,6 @@ public class GwPingData extends GwData implements Serializable {
         sb.append(", jitter=").append(jitter);
         sb.append(", lostRate=").append(lostRate);
         sb.append(", hostIp=").append(super.getHostIp());
-        sb.append(", errorCode=").append(errorCode);
         sb.append("]");
         return sb.toString();
     }

@@ -1,30 +1,40 @@
 package com.eystar.console.startup.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
 public class TPdcRegion implements Serializable {
+
+    @JSONField(name="r_code")
     @ApiModelProperty(value = "行政区划代码")
     private Long rCode;
 
+    @JSONField(name="r_name")
     @ApiModelProperty(value = "行政区划名称")
     private String rName;
 
+    @JSONField(name="r_level")
     @ApiModelProperty(value = "行政区划等级")
     private Short rLevel;
 
+    @JSONField(name="r_parent_code")
     @ApiModelProperty(value = "上级行政区划")
     private Long rParentCode;
 
+    @JSONField(name="r_tag")
     @ApiModelProperty(value = "地域标记")
     private String rTag;
 
+    @JSONField(name="region_path")
     @ApiModelProperty(value = "code的path路径")
     private String regionPath;
 
+    @JSONField(name="region_name_path")
     @ApiModelProperty(value = "name的path路径")
     private String regionNamePath;
+
 
     private static final long serialVersionUID = 1L;
 
