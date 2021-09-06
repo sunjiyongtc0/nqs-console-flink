@@ -28,16 +28,15 @@ public abstract class DetailAbstractDataParser extends AbstractDataParser {
 	}
 
 	@Override
-	public void prepare(GwData record) {
+	public void prepare(JSONObject record) {
 
 	}
 
 	@Override
-	public void after(GwData Record) {
+	public void after(JSONObject srcRecord) {
 		JSONArray array = null;
-		JSONObject srcRecord = (JSONObject) JSON.toJSON(Record);
 		try {
-			if(Record instanceof GwHttpData){
+			if(StrUtil.equals("HTTP",srcRecord.getString("task_type_name"))){
 				array = JSONArray.parseArray(srcRecord.getString("detail"));
 			}
 			if (array == null) {
@@ -49,28 +48,24 @@ public abstract class DetailAbstractDataParser extends AbstractDataParser {
 		}
 		List<GwData>  lgd=new ArrayList<GwData>();
 		for (int i = 0; i < array.size(); i++) {
-			GwHttpDetailData gwHttpDetailData=new GwHttpDetailData();
-			gwHttpDetailData=(GwHttpDetailData) DataParserHelper.setColumns(gwHttpDetailData,Record);
-			gwHttpDetailData.setId( UUIDKit.nextShortUUID()); // 重新生成任务ID
-			gwHttpDetailData.setParentId(Record.getId());
-			JSONObject DetailDataJson=(JSONObject)JSON.toJSON(gwHttpDetailData);
+			JSONObject DetailDataJson=DataParserHelper.setColumns(srcRecord);
+			DetailDataJson.put("id",UUIDKit.nextShortUUID());// 重新生成任务ID
+			DetailDataJson.put("parent_id",srcRecord.getString("id"));
+
 			JSONObject object = array.getJSONObject(i);
 			Set<String> keys= object.keySet();
 			for(String key:keys){
 				DetailDataJson.put(key,object.get(key));
-//				DetailDataJson.put(ChangeChar.camelToUnderline(key,1),object.get(key));
 			}
-			gwHttpDetailData=JSON.parseObject(DetailDataJson.toJSONString(),GwHttpDetailData.class);
 
-			if (StrUtil.isNotBlank(gwHttpDetailData.getHostIp())) {
-				JSONObject ipInfo = IPHelper.getIpInfo(gwHttpDetailData.getHostIp());
-				gwHttpDetailData.setHostProvince(ipInfo.getString("province_name"));// 省
-				gwHttpDetailData.setHostCity( ipInfo.getString("city_name"));// 市
-				gwHttpDetailData.setOperator( ipInfo.getString("operator"));// 运营商
+			if (StrUtil.isNotBlank(DetailDataJson.getString("host_ip"))) {
+				JSONObject ipInfo = IPHelper.getIpInfo(DetailDataJson.getString("host_ip"));
+				DetailDataJson.put("host_province",ipInfo.getString("province_name"));
+				DetailDataJson.put("host_city",ipInfo.getString("city_name"));
+				DetailDataJson.put("operator",ipInfo.getString("operator"));
 			}
+			GwHttpDetailData	gwHttpDetailData=JSON.parseObject(DetailDataJson.toJSONString(),GwHttpDetailData.class);
 			fillEachDetailRecord(gwHttpDetailData);
-
-			JSONObject gwHttpDetailDataJson = (JSONObject) JSON.toJSON(gwHttpDetailData);
 			lgd.add(gwHttpDetailData);
 		}
 		try {

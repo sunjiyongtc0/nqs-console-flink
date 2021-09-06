@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.eystar.console.startup.entity.gwdata.GwData;
 import com.eystar.console.startup.service.GwDataDetailService;
 import com.eystar.console.startup.service.GwDataService;
+import com.eystar.console.startup.util.ChangeChar;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -29,15 +30,13 @@ public class DataParserHelper {
         gwDataDetailService.insertDataList(lgd);
     }
 
-    public static  GwData setColumns( GwData gwA, GwData gwB){
+    public static  JSONObject setColumns( JSONObject gwBJson){
+        JSONObject gwAJson=new  JSONObject();
         Field[] fields=GwData.class.getDeclaredFields();
-        JSONObject gwAJson = (JSONObject) JSON.toJSON(gwA);
-        JSONObject gwBJson = (JSONObject) JSON.toJSON(gwB);
         for(int i=0;i<fields.length;i++){
-            gwAJson.put(fields[i].getName(),gwBJson.get(fields[i].getName()));
+            gwAJson.put(ChangeChar.camelToUnderline(fields[i].getName(),1),gwBJson.get(ChangeChar.camelToUnderline(fields[i].getName(),1)));
         }
-        gwA=JSON.parseObject(gwAJson.toJSONString(),gwA.getClass());
-        return gwA;
+        return gwAJson;
     }
 
 }

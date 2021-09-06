@@ -124,7 +124,6 @@ public class HeartClickHouseSink extends RichSinkFunction<HeartBeatMessage> {
             probeHeartBeatInfo.setTaskSize(infoObj.get("task_size") == null ? 0 : infoObj.getInteger("task_size"));
             probeHeartBeatInfo.setInternetIp(message.getInternetIp());
             probeHeartBeatInfo.setType(probeInfo.getInteger("type"));
-//            probeHeartBeatInfo.setType(40);
             probeHeartBeatInfo.setCreateHour(DateUtil.beginOfHour(new Date(message.getTestTime().longValue() * 1000L)).getTime());
             probeHeartBeatInfo.setCreateTime(message.getTestTime());
             probeHeartBeatInfo.setMonthTime(DateUtil.beginOfMonth(new Date(message.getTestTime().longValue() * 1000L)).toJdkDate());

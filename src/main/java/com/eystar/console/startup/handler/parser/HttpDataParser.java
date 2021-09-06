@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.eystar.common.util.NumberKit;
 import com.eystar.common.util.XxlConfBean;
 import com.eystar.console.startup.entity.gwdata.GwData;
-import com.eystar.console.startup.entity.gwdata.GwHttpData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,20 +19,19 @@ public class HttpDataParser extends DetailAbstractDataParser {
 
 
 
-	public void prepare(GwData record) {
-		GwHttpData gwHttpData=(GwHttpData) record;
+	public void prepare(JSONObject record) {
 		double first_screen_cost = 0d; // 首屏时延
 		double avg_speed = 0d; // 下载速度
 		double text_cost = 0d; // 文本传输时延
 		double page_total_cost = 0d; // 网页总时延
 		double conn_cost = 0d; // 连接时延
 		double page_avg_speed = 0d; // 首页下载速率
-		double page_size = NumberKit.valueOfDouble(gwHttpData.getPageSize(), 0d);
+		double page_size = NumberKit.valueOfDouble(record.getDouble("page_size"), 0d);
 
-		double trans_body_cost =NumberKit.valueOfDouble(gwHttpData.getTransBodyCost(), 0d);
-		double dns_cost = NumberKit.valueOfDouble(gwHttpData.getDnsCost(), 0d);
-		double tcp_cost = NumberKit.valueOfDouble(gwHttpData.getTcpCost(), 0d);
-		double ssl_cost = NumberKit.valueOfDouble(gwHttpData.getSslCost(), 0d);
+		double trans_body_cost =NumberKit.valueOfDouble(record.getDouble("trans_body_cost"), 0d);
+		double dns_cost = NumberKit.valueOfDouble(record.getDouble("dns_cost"), 0d);
+		double tcp_cost = NumberKit.valueOfDouble(record.getDouble("tcp_cost"), 0d);
+		double ssl_cost = NumberKit.valueOfDouble(record.getDouble("ssl_cost"), 0d);
 		// 下载速率
 		avg_speed = trans_body_cost == 0 ? 0 : NumberUtil.div(page_size, trans_body_cost / 1000, 4);
 		// 连接时延
@@ -42,14 +40,14 @@ public class HttpDataParser extends DetailAbstractDataParser {
 		text_cost = conn_cost + trans_body_cost;
 		// 解析 detail
 		try {
-			JSONArray array = JSONArray.parseArray(gwHttpData.getDetail());
-			parseDetail(gwHttpData, array);
+			JSONArray array = JSONArray.parseArray(record.getString("detail"));
+			parseDetail(record, array);
 		} catch (Exception e) {
-			System.out.println("解析detai出错，不是JSON格式，类型 = HTTP，detai = " + ((GwHttpData) record).getDetail()+ e.getMessage());
+			System.out.println("解析detai出错，不是JSON格式，类型 = HTTP，detai = " + record.getString("detail")+ e.getMessage());
 		}
 		//不存在element_total_size字段所以暂时用PageAvgSpeed存储数据
-		double element_total_size = NumberKit.valueOfDouble(((GwHttpData) record).getPageAvgSpeed(), 0d);
-		Double element_load_cost = gwHttpData.getElementLoadCost();
+		double element_total_size = NumberKit.valueOfDouble(record.getDouble("element_total_size"), 0d);
+		Double element_load_cost =  NumberKit.valueOfDouble(record.getDouble("element_load_cost"),0d);
 		if (element_load_cost == null) {
 			element_load_cost = 0d;
 		}
@@ -59,16 +57,16 @@ public class HttpDataParser extends DetailAbstractDataParser {
 		page_total_cost = text_cost + element_load_cost;
 		// 首页下载速率（文本+元素/页面总时延）
 		page_avg_speed = page_total_cost == 0 ? 0 : NumberUtil.div(page_size + element_total_size, page_total_cost / 1000, 4);
-		gwHttpData.setConnCost( conn_cost);
-		gwHttpData.setAvgSpeed(avg_speed);
-		gwHttpData.setTextCost(text_cost);
-		gwHttpData.setPageAvgSpeed(page_avg_speed);
-		gwHttpData.setFirstScreenCost(first_screen_cost);
-		gwHttpData.setPageTotalCost(page_total_cost);
-		record=gwHttpData;
+		record.put("conn_cost", conn_cost);
+		record.put("avg_speed", avg_speed);
+		record.put("text_cost", text_cost);
+		record.put("page_avg_speed", page_avg_speed);
+		record.put("first_screen_cost", first_screen_cost);
+		record.put("page_total_cost", page_total_cost);
+
 	}
 
-	private void parseDetail(GwHttpData record, JSONArray array) {
+	private void parseDetail(JSONObject record, JSONArray array) {
 		if (array == null) {
 			return;
 		}
@@ -106,7 +104,6 @@ public class HttpDataParser extends DetailAbstractDataParser {
 			}
 			// 所有元素大小
 			element_total_size += detail.getDoubleValue("element_size");
-			System.out.println("detail===>"+detail.toJSONString());
 		}
 
 		// 元素成功率
@@ -121,14 +118,13 @@ public class HttpDataParser extends DetailAbstractDataParser {
 				element_load_cost = a.getValue();
 			}
 		}
-		System.out.println("array===>"+array.toJSONString());
-		record.setElementsSum(array.size());
-		record.setElementsSuccessSum( elements_success_sum);
-		record.setElementsFailSum(elements_fail_sum);
-		record.setElementLoadCost(element_load_cost);
-		record.setPageTotalCost(element_total_size);
-		record.setElementsSuccessRate( elements_success_rate);
-		record.setDetail(array.toJSONString());
+		record.put("elements_sum", array.size());
+		record.put("elements_success_sum", elements_success_sum);
+		record.put("elements_fail_sum", elements_fail_sum);
+		record.put("element_load_cost", element_load_cost);
+		record.put("element_total_size", element_total_size);
+		record.put("elements_success_rate", elements_success_rate);
+		record.put("detail", array.toJSONString());
 	}
 
 	@Override

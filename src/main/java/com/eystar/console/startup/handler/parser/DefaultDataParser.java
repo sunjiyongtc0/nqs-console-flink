@@ -1,16 +1,16 @@
 package com.eystar.console.startup.handler.parser;
 
 
-import com.eystar.console.startup.entity.gwdata.GwData;
+import com.alibaba.fastjson.JSONObject;
 
 public class DefaultDataParser extends AbstractDataParser{
 
 	@Override
-	public void prepare(GwData record) {
+	public void prepare(JSONObject record) {
 	}
 
 	@Override
-	public void after(GwData record) {
+	public void after(JSONObject record) {
 
 	}
 

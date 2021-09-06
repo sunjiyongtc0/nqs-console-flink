@@ -1,5 +1,6 @@
 package com.eystar.console.startup.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -8,54 +9,71 @@ public class TTTaskSrcDest implements Serializable {
     @ApiModelProperty(value = "表ID")
     private String id;
 
+    @JSONField(name="probe_id")
     @ApiModelProperty(value = "探针ID")
     private String probeId;
 
+    @JSONField(name="probe_alias")
     @ApiModelProperty(value = "探针名称")
     private String probeAlias;
 
+    @JSONField(name="access_type_name")
     @ApiModelProperty(value = "测试端口")
     private String accessTypeName;
 
+    @JSONField(name="province_code")
     @ApiModelProperty(value = "测试源探针省编码ID")
     private String provinceCode;
 
+    @JSONField(name="province_name")
     @ApiModelProperty(value = "测试源探针省名称")
     private String provinceName;
 
+    @JSONField(name="city_code")
     @ApiModelProperty(value = "测试源探针地市编码ID")
     private String cityCode;
 
+    @JSONField(name="city_name")
     @ApiModelProperty(value = "测试源探针地市名称")
     private String cityName;
 
+    @JSONField(name="district_code")
     @ApiModelProperty(value = "测试源探针地市编码ID")
     private String districtCode;
 
+    @JSONField(name="district_name")
     @ApiModelProperty(value = "测试源探针地市名称")
     private String districtName;
 
+    @JSONField(name="probe_below")
     @ApiModelProperty(value = "探针归属域编码")
     private String probeBelow;
 
+    @JSONField(name="probe_below_type")
     @ApiModelProperty(value = "探针归属域类型（省、市、区、探针组、探针）")
     private Short probeBelowType;
 
+    @JSONField(name="dest_id")
     @ApiModelProperty(value = "目的ID")
     private String destId;
 
+    @JSONField(name="dest_addr")
     @ApiModelProperty(value = "目的地址")
     private String destAddr;
 
+    @JSONField(name="dest_name")
     @ApiModelProperty(value = "目的名称")
     private String destName;
 
+    @JSONField(name="dest_group_id")
     @ApiModelProperty(value = "目的组ID")
     private String destGroupId;
 
+    @JSONField(name="host_city")
     @ApiModelProperty(value = "目的归属市")
     private String hostCity;
 
+    @JSONField(name="host_province")
     @ApiModelProperty(value = "目的归属省")
     private String hostProvince;
 
@@ -65,30 +83,40 @@ public class TTTaskSrcDest implements Serializable {
     @ApiModelProperty(value = "任务状态（10-启动，20-暂停）")
     private Short status;
 
+    @JSONField(name="task_from")
     @ApiModelProperty(value = "任务来源平台（10-本平台）")
     private Short taskFrom;
 
+    @JSONField(name="task_md5")
     @ApiModelProperty(value = "任务MD5")
     private String taskMd5;
 
+
+    @JSONField(name="task_param_id")
     @ApiModelProperty(value = "任务参数ID")
     private String taskParamId;
 
+    @JSONField(name="template_id")
     @ApiModelProperty(value = "任务模板ID")
     private String templateId;
 
+    @JSONField(name="create_user")
     @ApiModelProperty(value = "创建用户名")
     private String createUser;
 
+    @JSONField(name="update_user")
     @ApiModelProperty(value = "修改用户名")
     private String updateUser;
 
+    @JSONField(name="create_time")
     @ApiModelProperty(value = "创建时间（Unix时间戳）")
     private Long createTime;
 
+    @JSONField(name="update_time")
     @ApiModelProperty(value = "修改时间（Unix时间戳）")
     private Long updateTime;
 
+    @JSONField(name="delete_flag")
     @ApiModelProperty(value = "是否删除（1-是，0-否）")
     private Short deleteFlag;
 

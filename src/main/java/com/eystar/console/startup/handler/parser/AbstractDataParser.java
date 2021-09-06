@@ -24,129 +24,107 @@ public abstract class AbstractDataParser {
 
 	protected static final Logger logger = LoggerFactory.getLogger(AbstractDataParser.class);
 
-	private  GwData fillRecord(DataMessage message) {
-		GwData record = new GwData();
+	private  JSONObject fillRecord(DataMessage message) {
+		JSONObject record=new JSONObject();
+
 		// 封装基础信息
-		record.setId(UUIDKit.nextShortUUID());
-		record.setProbeId( message.getProbeId());
-		record.setTaskFrom( message.getTaskFrom());
-		record.setTaskId( message.getTaskId());
-		record.setTaskTypeName( message.getTaskTypeName());
-		record.setTestTime( message.getTestTime());
+		record.put("id", UUIDKit.nextShortUUID());
+		record.put("probe_id", message.getProbeId());
+		record.put("task_from", message.getTaskFrom());
+		record.put("task_id", message.getTaskId());
+		record.put("task_type_name", message.getTaskTypeName());
+		record.put("test_time", message.getTestTime());
+
 		// 封装探针信息
 		JSONObject probeJson = InfoLoader.loadProbe(message.getProbeId());
-		record.setProbeAlias( probeJson.getString("probe_alias"));
-		record.setProbeName(probeJson.getString("probe_name"));
-		record.setPppoeUsername( probeJson.getString("pppoe_username"));
-		record.setLoid( probeJson.getString("loid"));
-		record.setSerialNum( probeJson.getString("sn"));
-		record.setProbeIp(probeJson.getString("ip"));
-		record.setPc(probeJson.getString("pc"));
-		record.setVendor(probeJson.getString("vendor"));
-		record.setProvinceName(probeJson.getString("province_name"));
-		record.setProvinceCode(probeJson.getLong("province_code"));
-		record.setCityName(probeJson.getString("city_name"));
-		record.setCityCode(probeJson.getLong("city_code"));
-		record.setDistrictName( probeJson.getString("district_name"));
-		record.setDistrictCode(probeJson.getLong("district_code"));
-		record.setTownName(probeJson.getString("town_name"));
-		record.setTownCode( probeJson.getLong("town_code"));
-//		record.setProbeAlias( probeJson.getString(ChangeChar.underlineToCamel("probe_alias")));
-//		record.setProbeName(probeJson.getString(ChangeChar.underlineToCamel("probe_name")));
-//		record.setPppoeUsername( probeJson.getString(ChangeChar.underlineToCamel("pppoe_username")));
-//		record.setLoid( probeJson.getString(ChangeChar.underlineToCamel("loid")));
-//		record.setSerialNum( probeJson.getString(ChangeChar.underlineToCamel("sn")));
-//		record.setProbeIp(probeJson.getString(ChangeChar.underlineToCamel("ip")));
-//		record.setPc(probeJson.getString(ChangeChar.underlineToCamel("pc")));
-//		record.setVendor(probeJson.getString(ChangeChar.underlineToCamel("vendor")));
-//		record.setProvinceName(probeJson.getString(ChangeChar.underlineToCamel("province_name")));
-//		record.setProvinceCode(probeJson.getLong(ChangeChar.underlineToCamel("province_code")));
-//		record.setCityName(probeJson.getString(ChangeChar.underlineToCamel("city_name")));
-//		record.setCityCode(probeJson.getLong(ChangeChar.underlineToCamel("city_code")));
-//		record.setDistrictName( probeJson.getString(ChangeChar.underlineToCamel("district_name")));
-//		record.setDistrictCode(probeJson.getLong(ChangeChar.underlineToCamel("district_code")));
-//		record.setTownName(probeJson.getString(ChangeChar.underlineToCamel("town_name")));
-//		record.setTownCode( probeJson.getLong(ChangeChar.underlineToCamel("town_code")));
+		record.put("probe_alias", probeJson.get("probe_alias"));
+		record.put("probe_name", probeJson.get("probe_name"));
+		record.put("pppoe_username", probeJson.get("pppoe_username"));
+		record.put("loid", probeJson.get("loid"));
+		record.put("serial_num", probeJson.get("sn"));
+		record.put("probe_ip", probeJson.get("ip"));
+		record.put("pc", probeJson.get("pc"));
+		record.put("vendor", probeJson.get("vendor"));
+		record.put("province_code", probeJson.get("province_code"));
+		record.put("province_name", probeJson.get("province_name"));
+		record.put("city_code", probeJson.get("city_code"));
+		record.put("city_name", probeJson.get("city_name"));
+		record.put("district_code", probeJson.get("district_code"));
+		record.put("district_name", probeJson.get("district_name"));
+		record.put("town_code", probeJson.get("town_code"));
+		record.put("town_name", probeJson.get("town_name"));
 		// 封装更多时间标签
 		Date date = new Date(message.getTestTime() * 1000);
-		record.setTestTimeH( DateUtil.beginOfDay(date).getTime() / 1000 + DateUtil.hour(date, true) * 3600);
-		record.setTestTimeD( DateUtil.beginOfDay(date).getTime() / 1000);
-		record.setTestTimeW( DateUtil.beginOfWeek(date).getTime() / 1000);
-		record.setTestTimeM( DateUtil.beginOfMonth(date).getTime() / 1000);
+		record.put("test_time_h", DateUtil.beginOfDay(date).getTime() / 1000 + DateUtil.hour(date, true) * 3600);
+		record.put("test_time_d", DateUtil.beginOfDay(date).getTime() / 1000);
+		record.put("test_time_w", DateUtil.beginOfWeek(date).getTime() / 1000);
+		record.put("test_time_m", DateUtil.beginOfMonth(date).getTime() / 1000);
+
 		// 封装任务信息
 		JSONObject taskJson = InfoLoader.loadTaskSrcDest(message.getTaskId());
 		// 系统中已删除的任务处理
 		try {
 			if (taskJson.isEmpty()) {
 				String error = "taskId = [" + message.getTaskId() + "],系统中不存在";
-//				System.out.println(error);
-//				throw new IllegalArgumentException(error);
+				System.out.println(error);
 			}
 		}catch (Exception e){
 			System.out.println(e.getMessage());
 				return  null;
 		}
-
 		//TODO 更改获取方式获取key值发生变化
-		JSONObject taskParamJson = InfoLoader.loadTaskParam(taskJson.getString("taskParamId"));
-		record.setTaskMd5( taskJson.getString("taskMd5"));
-		record.setTaskParamId(taskJson.getString("taskParamId"));
-		record.setTaskParamName( taskParamJson == null ? "" : taskParamJson.getString("taskParamName"));
-		record.setAccessTypeName(taskJson.getString("accessTypeName"));
-		record.setDestId(taskJson.getString("destId"));
-		record.setDestName( taskJson.getString("destName"));
-		record.setDestAddr(taskJson.getString("destAddr"));
+		JSONObject taskParamJson = InfoLoader.loadTaskParam(taskJson.getString("task_param_id"));
+		record.put("task_md5", taskJson.get("task_md5"));
+		record.put("task_param_id", taskJson.get("task_param_id"));
+		record.put("task_param_name", taskParamJson == null ? "" : taskParamJson.get("task_param_name"));
+		record.put("access_type_name", taskJson.get("access_type_name"));
+		record.put("dest_id", taskJson.get("dest_id"));
+		record.put("dest_name", taskJson.get("dest_name"));
+		record.put("dest_addr", taskJson.get("dest_addr"));
 		// 默认host_province、host_city、operator从任务中获取
 		//TODO 入库task_src_dest 值少
-//		record.setHostProvince( taskJson.getString("host_province"));
-//		record.setHostCity(taskJson.getString("host_city"));
-//		record.setOperator( taskJson.getString("operator"));
+		record.put("host_province", taskJson.get("host_province"));// 省
+		record.put("host_city", taskJson.get("host_city"));// 市
+		record.put("operator", taskJson.get("operator"));// 运营商
 		// 解析host_ip
-		if (StrUtil.isNotBlank(record.getHostIp())) {
-			JSONObject ipInfo = IPHelper.getIpInfo(record.getHostIp());
-			record.setHostProvince( ipInfo.getString("province_name"));// 省
-			record.setHostCity( ipInfo.getString("city_name"));// 市
-			record.setOperator( ipInfo.getString("operator"));// 运营商
+		if (StrUtil.isNotBlank(record.getString("host_ip"))) {
+			JSONObject ipInfo = IPHelper.getIpInfo(record.getString("host_ip"));
+			record.put("host_province", ipInfo.get("province_name"));// 省
+			record.put("host_city", ipInfo.get("city_name"));// 市
+			record.put("operator", ipInfo.get("operator"));// 运营商
 		}
 		return record;
 	}
 
-	public abstract void prepare(GwData record);
+	public abstract void prepare(JSONObject record);
 
 
 	public void process(DataMessage message) {
 		try {
 			System.out.println("任务类型："+message.getTaskTypeName());
 			// 对数据进行预处理
-			GwData record = fillRecord(message);
-			if(record==null){
+			JSONObject jsonGwData =fillRecord(message);
+			if(jsonGwData==null ||jsonGwData.isEmpty()){
 				return;
 			}
 			JSONObject MsgJson = message.getMsgJson();
-			JSONObject jsonGwData = (JSONObject) JSON.toJSON(record);
 			Field[] fields=getGwData(message.getTaskTypeName()).getDeclaredFields();
 			for(int i=0;i<fields.length;i++){
 				jsonGwData.put(fields[i].getName(),MsgJson.get(fields[i].getName()));
-//				jsonGwData.put(fields[i].getName(),MsgJson.get(ChangeChar.camelToUnderline(fields[i].getName(),1)));
 			}
-			GwData gdTask=JSON.parseObject(jsonGwData.toJSONString(),getGwData(message.getTaskTypeName()));
-			prepare(gdTask);
-			JSONObject gdTaskJson = (JSONObject) JSON.toJSON(gdTask);
-			ScoreHelper.fillScore(gdTaskJson);
-			GwData saveRecord=JSON.parseObject(gdTaskJson.toJSONString(),getGwData(message.getTaskTypeName()));
-
-			saveRecord.setCreateTime(saveRecord.getTestTime());
-			saveRecord.setMonthTime((DateUtil.beginOfMonth(new Date(saveRecord.getTestTime() * 1000L)).toJdkDate()));
-			JSONObject lastJson = (JSONObject) JSON.toJSON(saveRecord);
+			prepare(jsonGwData);
+			ScoreHelper.fillScore(jsonGwData);
+			jsonGwData.put("create_time",jsonGwData.getLong("test_time"));
+			jsonGwData.put("month_time",(DateUtil.beginOfMonth(new Date(jsonGwData.getLong("test_time") * 1000L)).toJdkDate()));
+			GwData saveRecord=JSON.parseObject(jsonGwData.toJSONString(),getGwData(message.getTaskTypeName()));
 //			// 5、将数据保存到bigdata中
 			DataParserHelper.insertData(saveRecord);
 //			// 6、将保存后的数据消息发送到kafka中
-			sendSavedToKafka(saveRecord);
-			after(saveRecord);
+			sendSavedToKafka(jsonGwData);
+			after(jsonGwData);
 			System.out.println("拼接入库操作理论上走"+saveRecord.toString());
 		} catch (Exception e) {
 			System.out.println("解析数据处理失败，本次数据的内容 = " + message.toString()+e.getMessage());
-			e.printStackTrace();
 		}
 	}
 
@@ -165,9 +143,8 @@ public abstract class AbstractDataParser {
 		}
 	}
 
-	private void sendSavedToKafka(GwData saveRecord) {
-		JSONObject taskParam = InfoLoader.loadTaskParam(saveRecord.getTaskParamId());
-		JSONObject saveRecordJson=(JSONObject) JSON.toJSON(saveRecord);
+	private void sendSavedToKafka(JSONObject saveRecordJson) {
+		JSONObject taskParam = InfoLoader.loadTaskParam(saveRecordJson.getString("task_param_id"));
 		if (taskParam != null && !taskParam.isEmpty()) {
 			String alarmTemplateId = taskParam.getString("alarm_template_id");
 			if (StrUtil.isNotBlank(alarmTemplateId)) {
@@ -181,5 +158,5 @@ public abstract class AbstractDataParser {
 		KafkaMessageProducer.send(XxlConfBean.getXxlValueByString("gw-console.kafka.topic.data.saved"),saveRecordJson.toJSONString());
 	}
 
-	public abstract void after(GwData record);
+	public abstract void after(JSONObject record);
 }

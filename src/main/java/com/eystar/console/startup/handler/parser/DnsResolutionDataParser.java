@@ -10,9 +10,7 @@ public class DnsResolutionDataParser extends DetailAbstractDataParser{
 	}
 
 	@Override
-	public void fillEachDetailRecord(GwData record) {
-
-	}
+	public void fillEachDetailRecord(GwData record) {}
 
 
 }

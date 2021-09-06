@@ -1,5 +1,6 @@
 package com.eystar.console.startup.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -8,42 +9,55 @@ public class TTTaskParam implements Serializable {
     @ApiModelProperty(value = "测试任务id")
     private String id;
 
+    @JSONField(name="task_param_name")
     @ApiModelProperty(value = "测试任务名字")
     private String taskParamName;
 
+    @JSONField(name="task_param_type")
     @ApiModelProperty(value = "参数类型（10-系统自动生成，20-用户自定义）")
     private Short taskParamType;
 
+    @JSONField(name="task_type_name")
     @ApiModelProperty(value = "任务类型名称")
     private String taskTypeName;
 
+    @JSONField(name="task_from")
     @ApiModelProperty(value = "任务来源标识（10-自有平台，20-拨测，30-cba）")
     private Short taskFrom;
 
+    @JSONField(name="template_id")
     @ApiModelProperty(value = "计算出参数是md5，供任务下发时判断是否同一个任务，在参数修改后计算templdate_id")
     private String templateId;
 
+    @JSONField(name="run_status")
     @ApiModelProperty(value = "参数状态（10-下发中，20-启动，30-下发失败，40-暂停，50-过期）")
     private Short runStatus;
 
+    @JSONField(name="modify_type")
     @ApiModelProperty(value = "修改类型（000-无变化，010-参数不变源变化目的不变）")
     private String modifyType;
 
+    @JSONField(name="test_date")
     @ApiModelProperty(value = "测试有效期，具体看字典，0-长期有效")
     private Short testDate;
 
+    @JSONField(name="start_date")
     @ApiModelProperty(value = "开始时间，格式：yyyy-MM-dd")
     private String startDate;
 
+    @JSONField(name="end_date")
     @ApiModelProperty(value = "结束时间，格式：yyyy-MM-dd")
     private String endDate;
 
+    @JSONField(name="test_time")
     @ApiModelProperty(value = "0-自定义，10-闲时，20-忙时")
     private Short testTime;
 
+    @JSONField(name="start_time")
     @ApiModelProperty(value = "格式：hh:mm")
     private String startTime;
 
+    @JSONField(name="end_time")
     @ApiModelProperty(value = "格式：hh:mm")
     private String endTime;
 
@@ -53,54 +67,70 @@ public class TTTaskParam implements Serializable {
     @ApiModelProperty(value = "任务优先级")
     private Short priority;
 
+    @JSONField(name="exec_times")
     @ApiModelProperty(value = "测试次数(与调度时间互斥）")
     private Short execTimes;
 
+    @JSONField(name="region_for")
     @ApiModelProperty(value = "10-区域随机（针对当前系统中有的探针不包括后注册探针），20-区域全量（包含后注册探针），30-全部探针（包含后注册探针）,40-最优分配")
     private Short regionFor;
 
+    @JSONField(name="region_num")
     @ApiModelProperty(value = "区域随机个数")
     private Integer regionNum;
 
+    @JSONField(name="user_region")
     @ApiModelProperty(value = "用户region")
     private Long userRegion;
 
+    @JSONField(name="region_path")
     @ApiModelProperty(value = "用户所在的区域路径")
     private String regionPath;
 
+    @JSONField(name="task_num")
     @ApiModelProperty(value = "分配任务数")
     private Integer taskNum;
 
+    @JSONField(name="is_alarm")
     @ApiModelProperty(value = "是否设置告警")
     private Short isAlarm;
 
+    @JSONField(name="alarm_template_id")
     @ApiModelProperty(value = "告警模板ID")
     private String alarmTemplateId;
 
     @ApiModelProperty(value = "任务描述")
     private String memo;
 
+    @JSONField(name="create_user")
     @ApiModelProperty(value = "创建用户名")
     private String createUser;
 
+    @JSONField(name="update_user")
     @ApiModelProperty(value = "修改用户名")
     private String updateUser;
 
+    @JSONField(name="create_time")
     @ApiModelProperty(value = "创建时间（Unix时间戳）")
     private Long createTime;
 
+    @JSONField(name="update_time")
     @ApiModelProperty(value = "修改时间（Unix时间戳）")
     private Long updateTime;
 
+    @JSONField(name="delete_flag")
     @ApiModelProperty(value = "是否删除（1-是，0-否）")
     private Short deleteFlag;
 
+    @JSONField(name="param_json")
     @ApiModelProperty(value = "测试任务参数配置json")
     private String paramJson;
 
+    @JSONField(name="template_json")
     @ApiModelProperty(value = "该模板对应的json数据")
     private String templateJson;
 
+    @JSONField(name="topo_json")
     @ApiModelProperty(value = "拓扑结构json")
     private String topoJson;
 

@@ -1,7 +1,6 @@
 package com.eystar.console.startup.transform;
 
 import com.eystar.console.startup.env.BeanFactory;
-import com.eystar.console.startup.service.DataService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.api.common.ExecutionConfig;
 import org.apache.flink.api.common.accumulators.IntCounter;
@@ -20,7 +19,6 @@ public abstract class CommonFunction extends RichFlatMapFunction<String, String>
     private IntCounter numLines = new IntCounter();
 
 
-    protected DataService dataService;
 
     protected ApplicationContext beanFactory;
 
@@ -33,7 +31,6 @@ public abstract class CommonFunction extends RichFlatMapFunction<String, String>
                 .getExecutionConfig().getGlobalJobParameters();
         beanFactory = BeanFactory.getBeanFactory((Configuration) globalJobParameters);
 
-        dataService = beanFactory.getBean(DataService.class);
     }
 
 
